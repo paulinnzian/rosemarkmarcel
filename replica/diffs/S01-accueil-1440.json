@@ -6,30 +6,22 @@
   },
   "clone": {
     "width": 1440,
-    "height": 977
+    "height": 827
   },
   "compared_at": {
     "width": 480,
     "height": 275
   },
-  "height_delta_pct": 18.5,
-  "score": 54.2,
+  "height_delta_pct": 0.4,
+  "score": 64.4,
   "verdict": "partly",
   "regions": [
-    {
-      "x": 0,
-      "y": 600,
-      "w": 600,
-      "h": 224,
-      "cells": 9,
-      "where": "bottom left"
-    },
     {
       "x": 720,
       "y": 360,
       "w": 240,
       "h": 464,
-      "cells": 7,
+      "cells": 6,
       "where": "bottom centre"
     },
     {
@@ -39,14 +31,6 @@
       "h": 464,
       "cells": 6,
       "where": "bottom right"
-    },
-    {
-      "x": 360,
-      "y": 120,
-      "w": 360,
-      "h": 120,
-      "cells": 3,
-      "where": "top centre"
     },
     {
       "x": 840,
@@ -65,12 +49,28 @@
       "where": "top right"
     },
     {
-      "x": 120,
+      "x": 480,
+      "y": 360,
+      "w": 120,
+      "h": 240,
+      "cells": 2,
+      "where": "middle centre"
+    },
+    {
+      "x": 360,
       "y": 120,
       "w": 120,
       "h": 120,
       "cells": 1,
       "where": "top left"
+    },
+    {
+      "x": 600,
+      "y": 120,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "top centre"
     },
     {
       "x": 1080,
@@ -79,6 +79,14 @@
       "h": 120,
       "cells": 1,
       "where": "middle right"
+    },
+    {
+      "x": 240,
+      "y": 480,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "bottom left"
     }
   ],
   "files": {

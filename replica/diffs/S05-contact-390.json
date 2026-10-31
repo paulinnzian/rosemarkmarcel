@@ -13,7 +13,7 @@
     "height": 448
   },
   "height_delta_pct": -5.9,
-  "score": 34.9,
+  "score": 37.1,
   "verdict": "different",
   "regions": [
     {
@@ -21,7 +21,7 @@
       "y": 160,
       "w": 384,
       "h": 288,
-      "cells": 73,
+      "cells": 74,
       "where": "bottom centre"
     },
     {

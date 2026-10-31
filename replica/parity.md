@@ -1,25 +1,27 @@
 # Parité : site de Rosemark Marcel
 
-Date : 2026-10-31. Clone : build de production local (commit 785cb93 + reclassement de la ligne « source des chiffres »). Original : captures de `replica/screens/` (aucune nouvelle visite de son site).
+Date : 2026-10-31, mis à jour après /replica-build (favicon, bouton WhatsApp, cadre photo, barre d'onglets admin). Clone : build de production local. Original : captures de `replica/screens/` (aucune nouvelle visite de son site).
 Outils : `parity.py` et `imgdiff.py` de /replica-diff, sans modification.
+
+Historique : premier passage 91,7 (fonctionnel 99,0, mise en page 62,7) ; après les corrections 92,7 (100,0 et 63,6).
 
 ## Verdict : livrable (shippable)
 
 - Toutes les fonctionnalités indispensables de l'original sont faites : 31 sur 31.
-- Score fonctionnel : 99,0 (80 demandé).
+- Score fonctionnel : 100,0 (80 demandé).
 - Aucun bug S1 ou S2 ouvert (`replica/bugs.md` : 4 trouvés, 4 corrigés).
 - Pas encore « meilleur que l'original » au sens du pack : /replica-entrepreneur n'a pas tourné. Le clone a déjà ce que l'original n'a pas (admin complet, statistiques, dons activables), mais ce n'est pas encore une liste de corrections pensée pour les visiteurs.
 - Avant la mise en ligne, hors parité : SMTP de production, purge pg_cron, politique de confidentialité, vérifications manuelles sur un vrai téléphone (`replica/test-plan.md`, cas M). C'est le travail de /replica-deploy.
 
 | mesure | score |
 | --- | --- |
-| **Global** | **91,7 / 100** |
-| Fonctionnel (pondéré must 3, should 2, could 1) | 99,0 (35 lignes comptées) |
-| Mise en page (19 paires de captures) | 62,7 |
+| **Global** | **92,7 / 100** |
+| Fonctionnel (pondéré must 3, should 2, could 1) | 100,0 (35 lignes comptées) |
+| Mise en page (19 paires de captures) | 63,6 |
 
 ## Fonctionnel
 
-Seul manque : **[should] SEO, favicon**. Titre et description sont en place ; l'icône est encore celle de Next.
+Plus aucun manque. Le dernier (**[should] favicon**) est fait : `src/app/icon.svg` + `apple-icon.png`.
 
 Reclassé pendant ce diff : « Mention de la source des chiffres » passe de `partial` à `yes`. L'original affiche « Chiffres communiqués par … · Synchronisation automatique non activée. » Le clone affiche « Chiffres communiqués par Marcel · mis à jour le … » : même information pour le visiteur (chiffres saisis à la main), texte modifiable dans l'admin. Le `partial` venait de la future variante « synchro auto », qui relève d'une autre ligne, absente de l'original. Avant ce reclassement : 97,5 et 30 must-haves sur 31.
 
@@ -32,17 +34,17 @@ Méthode : une capture pleine page par largeur, découpée **section par section
 | section | 390 px | 1440 px | ce qui diffère vraiment |
 | --- | --- | --- | --- |
 | S00 en-tête | 51,7 | 84,8 | rien de structurel ; police |
-| S01 accueil | 45,4 | 54,2 | cadre photo plus grand dans le clone (+13 % de hauteur en mobile, +18 % en bureau) ; paragraphe sur 3 lignes au lieu de 2 en mobile |
+| S01 accueil | 44,8 | 64,4 | **corrigé** : cadre photo recadré (3/4 mobile, 4/5 bureau) ; hauteur 827 px contre 824 en bureau (977 avant), 959 contre 901 en mobile (1016 avant) ; reste le paragraphe sur 3 lignes en mobile (police) |
 | bandeau | 43,7 | 52,2 | mobile : l'original tient sur **une ligne coupée au bord**, le clone passe à la ligne (3 lignes, 120 px au lieu de 65) |
 | S02 à propos | 65,6 | 77,4 | police |
 | S04 communauté | 66,7 | 78,5 | police |
 | S03 univers | 45,0 | 68,9 | carte « Ça, c'est Le Repos » un peu plus haute ; police |
 | S06 soutenir | 70,8 | 83,3 | police |
-| S05 contact | 34,9 | 56,5 | mobile : bouton WhatsApp **pleine largeur** dans l'original, à la largeur du texte dans le clone ; bureau : paragraphe sur une ligne |
+| S05 contact | 37,1 | 65,2 | **corrigé** : bouton WhatsApp pleine largeur sous 1024 px, comme l'original ; reste le paragraphe sur une ligne en bureau (police) |
 | pied | 68,1 | 81,0 | police |
 | modale dons (390, même défilement) | 63,4 | — | bouton « Fermer » orange pleine largeur dans le clone, bleu compact dans l'original ; titre sur deux lignes |
 
-Lecture honnête du 62,7 : la structure (blocs, ordre, hiérarchie) est la même partout, vérifiée à l'œil sur les images côte à côte. Le score est tiré vers le bas par la police : Inter Tight dans le clone (choix de /replica-design), une sans-serif de type Arial dans les captures de l'original. D'autres lignes coupent donc à d'autres endroits, et la carte des contours change de case. Les vrais écarts de structure sont les quatre en gras ou chiffrés ci-dessus.
+Lecture honnête du 63,6 : la structure (blocs, ordre, hiérarchie) est la même partout, vérifiée à l'œil sur les images côte à côte. Le score est tiré vers le bas par la police : Inter Tight dans le clone (choix de /replica-design), une sans-serif de type Arial dans les captures de l'original. D'autres lignes coupent donc à d'autres endroits, et la carte des contours change de case. Les vrais écarts de structure sont les quatre en gras ou chiffrés ci-dessus.
 
 Images : `replica/diffs/sections/<section>-<largeur>-{orig,clone,diff}.png`, rapports JSON `replica/diffs/<section>-<largeur>.json`, pleine page `replica/diffs/home-390.png`, `home-1440.png`, `modal-dons-390.png`.
 
@@ -57,14 +59,15 @@ Images : `replica/diffs/sections/<section>-<largeur>-{orig,clone,diff}.png`, rap
 | mémoire entre visites | rien | rien (aucun cookie côté visiteur) | garder |
 | e-mails | aucun | aucun pour le visiteur ; code de connexion pour l'admin seulement | garder |
 | mise à jour du contenu | inconnue côté visiteur (pas d'admin visible) | admin sur téléphone, publication immédiate | garder (gain) |
-| bandeau mobile | une ligne coupée au bord | phrases complètes sur 3 lignes | **à trancher** : la spec /replica-design dit « passent à la ligne, comme l'original », ce que la capture contredit. Garder le retour à la ligne (tout est lisible, sans animation) ou repasser à une ligne |
+| bandeau mobile | une ligne coupée au bord | phrases complètes sur 3 lignes | garder par défaut (tout est lisible, sans animation) ; spec /replica-design corrigée en « écart assumé » ; à revoir si Marcel préfère une ligne |
 
-## Les cinq prochaines choses à faire
+## Les cinq points du premier passage
 
-1. **Favicon** : la seule fonctionnalité manquante (should). Une icône à partir de l'identité (bleu, ✦ orange) en `app/icon.svg` + `apple-icon.png`.
-2. **Bouton WhatsApp pleine largeur sur mobile** (S05), comme l'original : cible plus grande pour le pouce, écart structurel le plus net.
-3. **Bandeau mobile** : trancher entre une ligne (fidèle à l'original) et le retour à la ligne actuel, puis corriger la spec ou le composant pour qu'ils disent la même chose.
-4. **Cadre photo de l'accueil** : ramener sa hauteur vers celle de l'original (−13 % mobile, −18 % bureau) pour que la section suivante arrive plus tôt.
-5. **Barre d'onglets en bas de l'admin sur mobile** (spec AdminShell), le dernier écart du build côté admin.
+1. **Favicon** : fait (`icon.svg` + `apple-icon.png`).
+2. **Bouton WhatsApp pleine largeur sur mobile** : fait.
+3. **Bandeau mobile** : retour à la ligne gardé par défaut, spec corrigée (« écart assumé ») ; à repasser sur une ligne si Marcel préfère l'original.
+4. **Cadre photo de l'accueil** : fait (hauteur de l'accueil quasi égale à l'original en bureau).
+5. **Barre d'onglets en bas de l'admin sur mobile** : faite (Accueil, Dons, Réseaux, Textes, Plus ; barre latérale 240 px sur ordinateur), test F04-E5.
 
-Ensuite : /replica-build pour ces points, puis /replica-entrepreneur pour passer de « livrable » à « meilleur que l'original ».
+Le score de mise en page restant (63,6) vient de la police ; ne pas le chasser (la police est un choix de /replica-design).
+Ensuite : /replica-entrepreneur pour passer de « livrable » à « meilleur que l'original », puis /replica-deploy.

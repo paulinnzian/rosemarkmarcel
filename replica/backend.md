@@ -63,6 +63,5 @@ Après un changement de `src/content.ts` : `pnpm db:seed` puis `pnpm db:reset`.
 
 - SMTP Resend en production (étape 5) et test d'un vrai e-mail (F04-M1).
 - pg_cron : activer la purge des statistiques (étape 8).
-- Barre d'onglets en bas d'écran sur mobile (spec AdminShell) ; aujourd'hui une barre en haut.
 - Ajouter un canal de contact (seuls les canaux existants se modifient).
 - Politique de confidentialité (case de la checklist).

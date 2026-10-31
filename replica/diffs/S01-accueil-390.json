@@ -6,14 +6,14 @@
   },
   "clone": {
     "width": 390,
-    "height": 1016
+    "height": 959
   },
   "compared_at": {
     "width": 390,
     "height": 901
   },
-  "height_delta_pct": 12.8,
-  "score": 45.4,
+  "height_delta_pct": 6.4,
+  "score": 44.8,
   "verdict": "different",
   "regions": [
     {
@@ -21,7 +21,7 @@
       "y": 480,
       "w": 352,
       "h": 421,
-      "cells": 84,
+      "cells": 89,
       "where": "bottom centre"
     },
     {

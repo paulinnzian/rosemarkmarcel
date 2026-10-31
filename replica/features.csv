@@ -40,7 +40,7 @@ Textes alternatifs et repères (header / nav / main / footer),accessibilité,mus
 Animations légères à l'apparition des sections,design,should,no,no,désactivées si prefers-reduced-motion
 Lighthouse mobile ≥ 90 et images WebP,performance,must,no,yes,"contrainte du brief ; 2026-10-31, build de production local, Lighthouse 12.8.2 mobile : performance 91, accessibilité 100, bonnes pratiques 100, SEO 100 (LCP 2,9 s, CLS 0, TBT 240 ms) ; next/image sert AVIF / WebP ; à remesurer sur Vercel"
 Métadonnées de partage (Open Graph / WhatsApp aperçu),SEO,should,no,no,le lien circule surtout sur WhatsApp ; image d'aperçu 1200x630
-Balises title / description / favicon,SEO,should,yes,partial,build : title et description en place ; favicon par défaut de Next à remplacer
+Balises title / description / favicon,SEO,should,yes,yes,"title et description en place ; icône du site src/app/icon.svg (carré bleu, étoile orange) + apple-icon.png 180 px ; favicon.ico par défaut de Next retiré (2026-10-31)"
 Données structurées Person (schema.org),SEO,could,no,no,
 Mesure des vues et clics (réseaux / WhatsApp / appel / don) sans cookie ni IP stockée,analytics,must,no,yes,"click_events + sendBeacon ; robots filtrés ; purge après 13 mois ; /api/evenements + sendBeacon ; robots, admin connecté, origine étrangère et envois invalides écartés (F04-H6) ; purge pg_cron à activer en production"
 Thème sombre,design,could,no,no,

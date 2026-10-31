@@ -13,7 +13,7 @@
     "height": 844
   },
   "height_delta_pct": 0.0,
-  "score": 63.4,
+  "score": 62.6,
   "verdict": "partly",
   "regions": [
     {
@@ -36,8 +36,8 @@
       "x": 0,
       "y": 1408,
       "w": 576,
-      "h": 256,
-      "cells": 20,
+      "h": 280,
+      "cells": 23,
       "where": "bottom centre"
     },
     {
@@ -119,14 +119,6 @@
       "h": 64,
       "cells": 1,
       "where": "bottom right"
-    },
-    {
-      "x": 320,
-      "y": 1664,
-      "w": 64,
-      "h": 24,
-      "cells": 1,
-      "where": "bottom centre"
     }
   ],
   "files": {
