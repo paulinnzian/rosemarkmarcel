@@ -1,4 +1,4 @@
-import { cacheLife, cacheTag } from "next/cache";
+import { unstable_cache } from "next/cache";
 
 import { seedContent } from "@/content";
 import { siteContentSchema, type SiteContent } from "@/content/schema";
@@ -9,27 +9,24 @@ import { createPublicClient } from "@/lib/supabase/public-client";
 /** Tag du contenu public : chaque enregistrement de l'admin appelle updateTag(CONTENT_TAG). */
 export const CONTENT_TAG = "contenu";
 
+const readCachedContent = unstable_cache(readContentFromDatabase, ["site-content"], {
+  tags: [CONTENT_TAG],
+});
+
 /**
  * Contenu de la page publique, gardé en cache jusqu'au prochain enregistrement dans l'admin.
  * Sans Supabase configuré, ou si la base ne répond pas, les valeurs initiales de content.ts sont servies
- * (avec un cache court dans le second cas, pour reprendre la base dès qu'elle revient).
+ * sans mettre le repli en cache, afin de reprendre la base dès qu'elle revient.
  */
 export async function getSiteContent(): Promise<SiteContent> {
-  "use cache";
-  cacheTag(CONTENT_TAG);
-
   if (!isSupabaseConfigured()) {
-    cacheLife("max");
     return seedContent;
   }
 
   try {
-    const content = await readContentFromDatabase();
-    cacheLife("max");
-    return content;
+    return await readCachedContent();
   } catch (error) {
     console.error("Contenu illisible dans Supabase, valeurs initiales servies :", error);
-    cacheLife("minutes");
     return seedContent;
   }
 }

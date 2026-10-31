@@ -17,8 +17,6 @@ const nextConfig: NextConfig = {
     // Photo du héros : 5 Mo au plus (limite du bucket), plus l'enveloppe multipart.
     serverActions: { bodySizeLimit: "6mb" },
   },
-  cacheComponents: true,
-  partialPrefetching: true,
   turbopack: {
     rules: {
       "*.css": {

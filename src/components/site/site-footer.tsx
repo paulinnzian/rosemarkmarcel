@@ -1,15 +1,7 @@
-import { cacheLife } from "next/cache";
 import Link from "next/link";
 
-// new Date() est interdit pendant le prérendu (cacheComponents) : l'année est calculée dans un cache d'un jour.
-async function currentYear(): Promise<number> {
-  "use cache";
-  cacheLife("days");
-  return new Date().getFullYear();
-}
-
 export async function SiteFooter({ creatorName, footerLine }: { creatorName: string; footerLine: string }) {
-  const year = await currentYear();
+  const year = new Date().getFullYear();
 
   return (
     <footer className="border-t border-line">
