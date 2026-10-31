@@ -49,6 +49,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Tout sauf les fichiers du build et les images optimisées : servis tels quels, quel que soit l'hôte.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // Le proxy Hostinger perd le corps des réponses qui traversent le proxy Next.js.
+  // Seul l'admin exige le rafraîchissement de session Supabase.
+  matcher: ["/admin/:path*"],
 };
