@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import { publicUrl } from "@/lib/request-host";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createSessionClient } from "@/lib/supabase/server";
 
@@ -8,7 +9,7 @@ import { createSessionClient } from "@/lib/supabase/server";
  * donc le lien marche aussi s'il s'ouvre dans un autre navigateur que celui de la demande (Gmail, WhatsApp).
  */
 export async function GET(request: NextRequest) {
-  const to = (path: string) => NextResponse.redirect(new URL(path, request.url));
+  const to = (path: string) => NextResponse.redirect(publicUrl(path, request.headers, request.url));
   const tokenHash = request.nextUrl.searchParams.get("token_hash");
   const type = request.nextUrl.searchParams.get("type");
 

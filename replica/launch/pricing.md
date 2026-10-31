@@ -12,7 +12,7 @@ Date : 2026-10-31. On lance le site de Marcel auprès de son public, pas une off
 
 Proxy de catégorie (outils de lien en bio, pas le site de Marcel ; `fixes.md`) : prix trop élevés et en hausse (35 avis), prélèvements sans prévenir ou résiliation difficile (16), fonctions utiles réservées à l'offre payante (16), commissions sur les revenus (13), sur 2 sources. Pour Marcel, la réponse est déjà dans l'architecture : le site est à lui, sans abonnement à un outil ni commission.
 
-Coûts réels pour Marcel, à confirmer à l'inscription (les prix changent, à relire le jour où il crée les comptes) : hébergement Vercel, base Supabase, envoi d'e-mails Resend et nom de domaine. Les offres gratuites de Vercel, Supabase et Resend suffisent probablement au trafic d'un site vitrine. Le plan gratuit de Supabase met le projet en pause après 7 jours sans activité (`backend.md`, étape 9). Je n'ai relevé aucun prix ici : aucune page de tarifs n'a été lue pendant cette session.
+Coûts réels pour Marcel, à confirmer à l'inscription (les prix changent, à relire le jour où il crée les comptes) : hébergement Hostinger (l'hébergement d'applications Node.js demande un plan payant Business ou Cloud), base Supabase, envoi d'e-mails Resend et nom de domaine. Les offres gratuites de Supabase et Resend suffisent probablement au trafic d'un site vitrine. Le plan gratuit de Supabase met le projet en pause après 7 jours sans activité (`backend.md`, étape 9). Je n'ai relevé aucun prix ici : aucune page de tarifs n'a été lue pendant cette session.
 
 ## Si `vitrine-createur` devient une offre pour d'autres créateurs
 

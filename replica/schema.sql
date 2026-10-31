@@ -150,7 +150,7 @@ create table public.click_events (
   kind        text not null check (kind in ('page_view', 'social', 'whatsapp', 'phone', 'donation', 'cta')),
   target      text check (char_length(target) <= 40),          -- réseau, « floating », « hero »…
   path        text not null default '/' check (char_length(path) <= 200),
-  country     char(2),                                          -- en-tête x-vercel-ip-country
+  country     char(2),                                          -- cf-ipcountry ou équivalent (src/lib/request-host.ts)
   device      text check (device in ('mobile', 'tablet', 'desktop')),
   occurred_at timestamptz not null default now()
 );

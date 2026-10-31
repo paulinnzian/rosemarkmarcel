@@ -12,7 +12,10 @@ function authorized(request: NextRequest, secret: string): boolean {
   return given.length === expected.length && timingSafeEqual(given, expected);
 }
 
-/** Vérification quotidienne des liens (Vercel Cron, vercel.json), avec l'en-tête Authorization: Bearer CRON_SECRET. */
+/**
+ * Vérification quotidienne des liens, appelée par une tâche planifiée de l'hébergeur (Hostinger : hPanel > Cron Jobs)
+ * avec l'en-tête Authorization: Bearer CRON_SECRET. Commande dans le README, section « Mise en ligne sur Hostinger ».
+ */
 export async function GET(request: NextRequest) {
   const secret = process.env.CRON_SECRET;
   if (!secret || !isServiceConfigured()) return NextResponse.json({ error: "Tâche désactivée sur ce serveur." }, { status: 503 });

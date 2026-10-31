@@ -90,7 +90,7 @@ Choisies par preuve × coût. Chacune ajoutée à `features.csv` (`original` = n
 | 1 | **Vérifier les liens** : à l'enregistrement et chaque jour, tester le lien de paiement, les liens réseaux et WhatsApp ; afficher « lien cassé » sur le tableau de bord. Les réseaux qui bloquent les robots (Instagram, TikTok) sont marqués « non vérifiable », pas « cassé » | M | /replica-backend | thème 10 (6 avis, 2 sources) ; un lien de paiement cassé = un don perdu sans que Marcel le sache |
 | 2 | **Code qui n'arrive pas** : à l'étape du code, dire où regarder (spams, promotions), le délai, et permettre de renvoyer après 60 s ; en production, SMTP Resend sur le domaine du site (déjà prévu) | S | /replica-backend | thème 2 (36 avis, 2 sources) |
 | 3 | **Statistiques qu'on croit** : afficher depuis quand on compte, la dernière visite enregistrée, et ce qui n'est pas compté (robots, Marcel connecté) ; « 0 » seulement quand c'est vraiment 0 | S | /replica-build | thème 7 (12 avis, 2 sources) |
-| 4 | **Page confidentialité courte et vraie** : pas de cookie côté visiteur, pas de publicité, aucune donnée revendue ni donnée à une IA, sous-traitants nommés (Supabase, Vercel, Resend). Elle est de toute façon due avant la mise en ligne | S | /replica-build (+ relecture juridique) | thèmes 8 et 9 (17 avis, 2 sources) |
+| 4 | **Page confidentialité courte et vraie** : pas de cookie côté visiteur, pas de publicité, aucune donnée revendue ni donnée à une IA, sous-traitants nommés (Supabase, Hostinger, Resend). Elle est de toute façon due avant la mise en ligne | S | /replica-build (+ relecture juridique) | thèmes 8 et 9 (17 avis, 2 sources) |
 | 5 | **Sauvegarde téléchargeable** dans l'admin : textes, réseaux, contacts, réglages des dons en un fichier, plus la photo ; Marcel peut partir quand il veut | S | /replica-backend | thème 11 (5 avis, 2 sources) |
 | 6 | **Dire où va l'argent** dans la section « Soutenir » : « Le site ne prend rien sur votre don ; seuls les frais de votre service de paiement s'appliquent. » Texte modifiable dans l'admin, à valider par Marcel | S | /replica-build | thème 6 (13 avis, 2 sources) |
 | 7 | **Passage VoiceOver** sur l'admin, à la main, sur un iPhone (axe passe déjà sans violation) | S | /replica-test | thème 13 (mince : 5 avis, une source) |
@@ -99,7 +99,7 @@ Choisies par preuve × coût. Chacune ajoutée à `features.csv` (`original` = n
 
 | # | état | où |
 | --- | --- | --- |
-| 1 | fait ; WhatsApp non testé : `wa.me` répond 200 pour n'importe quel numéro, le format du numéro est déjà validé à l'enregistrement | `src/lib/links/`, tableau de bord, `vercel.json` |
+| 1 | fait ; WhatsApp non testé : `wa.me` répond 200 pour n'importe quel numéro, le format du numéro est déjà validé à l'enregistrement | `src/lib/links/`, tableau de bord, `scripts/cron-verifier-liens.sh` |
 | 2 | fait (côté site) ; reste le SMTP Resend de production, qui demande le compte de Marcel | `/admin/connexion` |
 | 3 | fait | `/admin/statistiques` |
 | 4 | fait ; relecture juridique recommandée | `/confidentialite` |

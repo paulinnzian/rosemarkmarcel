@@ -6,9 +6,10 @@ Date : 2026-10-31. On annonce le nouveau site de Marcel à son public et aux mar
 
 Le travail de /replica-deploy. Comptes et clés créés **par vous ou par Marcel** (`backend.md`, « Passer en production ») :
 
-- [ ] domaine, Vercel, projet Supabase (Europe), `pnpm exec supabase db push`, seed chargé une fois ;
+- [ ] domaine, application Node.js Hostinger (plan Business ou Cloud), projet Supabase (Europe), `pnpm exec supabase db push`, seed chargé une fois ;
 - [ ] SMTP Resend sur le domaine (sinon le code de connexion de Marcel risque de ne pas arriver) ;
-- [ ] variables Vercel, dont `CRON_SECRET` (vérification quotidienne des liens) ;
+- [ ] variables d'environnement dans hPanel (avant le build), dont `CRON_SECRET`, et la tâche cron quotidienne (`scripts/cron-verifier-liens.sh`) ;
+- [ ] vérifications « Après déploiement » de `test-plan.md` (redirection `www`, connexion admin, statistiques, cron) ;
 - [ ] compte de Marcel : `pnpm admin:add <son e-mail> owner`, puis **une connexion réelle sur son téléphone** (cas F04-M1) ;
 - [ ] pg_cron : purge des statistiques à 13 mois (la page Confidentialité l'annonce comme « prévue ») ;
 - [ ] relecture juridique de `/confidentialite`.
@@ -59,7 +60,7 @@ Je ne connais pas ces marques : la liste est à faire par Marcel.
 
 - **Statistiques** : déjà en place, sans cookie (`/admin/statistiques`). La première semaine sert de point de départ : on note les chiffres sans se fixer d'objectif avant d'avoir des données réelles. On regarde J+1, J+7 et J+30 : vues, clics par réseau, conversations WhatsApp, clics sur « soutenir ».
 - **Liens** : vérifiés chaque jour ; un lien cassé apparaît sur le tableau de bord.
-- **Erreurs** : pas d'outil de suivi branché. Les erreurs serveur sont visibles dans les journaux Vercel (Runtime Logs). Un outil comme Sentry demanderait un compte créé par vous et une mise à jour de la page Confidentialité ; non fait.
+- **Erreurs** : pas d'outil de suivi branché. Les erreurs serveur sont visibles dans les journaux de l'application Node.js dans hPanel. Un outil comme Sentry demanderait un compte créé par vous et une mise à jour de la page Confidentialité ; non fait.
 
 ## 6. Les 10 premières personnes à qui parler
 

@@ -29,9 +29,33 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+## Mise en ligne sur Hostinger (Node.js)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Application** : hPanel > Sites web > Node.js. Build `pnpm install && pnpm build`, démarrage `pnpm start`,
+   Node.js 20.9 ou plus récent.
+2. **Variables d'environnement** (mêmes noms que `.env.example`), à saisir **avant** le build : les `NEXT_PUBLIC_*`
+   sont figées dans le code au moment du build.
+   - `NEXT_PUBLIC_SUPABASE_URL` = `https://zchsdhqmsuwqgtllhofn.supabase.co`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` et `SUPABASE_SERVICE_ROLE_KEY` : Supabase > Project Settings > API Keys
+   - `NEXT_PUBLIC_SITE_URL` = `https://<domaine>` (sans barre finale)
+   - `CRON_SECRET` = une longue valeur aléatoire (`openssl rand -hex 32`)
+3. **Domaine** : `NEXT_PUBLIC_SITE_URL` donne l'adresse canonique. Hostinger fait tourner `www.<domaine>` et
+   `<domaine>` dans deux processus séparés, chacun avec son cache ; `src/proxy.ts` redirige l'autre (308) vers
+   l'adresse canonique pour qu'une modification faite dans l'admin soit visible partout.
+4. **Vérification quotidienne des liens** : hPanel > Avancé > Cron Jobs > Custom, `0 6 * * *` (UTC), commande
+   `/bin/sh <chemin du site>/scripts/cron-verifier-liens.sh`. Hostinger refuse guillemets et redirections dans ce
+   champ, d'où le script. Il lit ses réglages dans `~/.vitrine-cron` (à créer en SSH, puis `chmod 600`) :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```bash
+   SITE_URL=https://<domaine>
+   CRON_SECRET=<même valeur que la variable d'environnement>
+   ```
+
+5. **Connexion admin** (Supabase > Authentication) :
+   - URL Configuration : Site URL `https://<domaine>`, Redirect URLs `https://<domaine>/admin/auth/callback`
+   - Email Templates > Magic Link : sujet « Votre code de connexion », contenu de `supabase/templates/magic-link.html`
+   - Sign In / Providers : « Allow new users to sign up » désactivé, fournisseur Email activé
+6. **Pays dans les statistiques** : vide sur Hostinger seul. Il se remplit si Cloudflare est placé devant le domaine
+   (en-tête `cf-ipcountry`).
+
 # rosemarkmarcel

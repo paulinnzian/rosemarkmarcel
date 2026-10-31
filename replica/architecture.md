@@ -26,7 +26,7 @@ Décisions du 2026-10-31 :
 | tâches | pg_cron (purge des statistiques > 13 mois) | dans la base, pas de serveur de tâches |
 | statistiques | table `click_events` + `navigator.sendBeacon` | sans cookie ni IP, donc pas de bannière ; lisibles dans l'admin |
 | tests | Vitest (validation, formatage, RLS via client anon/admin) + Playwright (F01–F04, mobile) | prépare /replica-test |
-| hébergement | Vercel + domaine personnalisé ; Supabase région la plus proche (eu-west / Francfort ou Londres) | pas de région Afrique de l'Ouest chez Supabase ; l'Europe est la plus proche d'Abidjan |
+| hébergement | Hostinger, application web Node.js (`next start`, un processus par domaine : `www` redirigé vers le domaine nu par `src/proxy.ts`) + domaine personnalisé ; Supabase région la plus proche (eu-west / Francfort ou Londres) | pas de région Afrique de l'Ouest chez Supabase ; l'Europe est la plus proche d'Abidjan |
 
 Un seul projet, une seule base. Pas de CMS tiers : l'admin est un petit nombre de formulaires sur 5 tables.
 

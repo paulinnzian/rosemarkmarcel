@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
+import { publicUrl } from "@/lib/request-host";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { createSessionClient } from "@/lib/supabase/server";
 
@@ -12,5 +13,5 @@ export async function POST(request: NextRequest) {
     const supabase = await createSessionClient();
     await supabase.auth.signOut();
   }
-  return NextResponse.redirect(new URL("/admin/connexion", request.url), 303);
+  return NextResponse.redirect(publicUrl("/admin/connexion", request.headers, request.url), 303);
 }

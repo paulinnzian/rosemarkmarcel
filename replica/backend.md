@@ -17,7 +17,7 @@ Stack : Supabase (Postgres + Auth + Storage), Next.js 16 (Server Actions, route 
 | Statistiques | `POST /api/evenements` (client service, filtre robots, admins ignorés, origine vérifiée, 60 / min) → `/admin/statistiques` | Playwright F04-H6 |
 | Gestionnaires | `/admin/acces` (propriétaire seul) : ajout et retrait via le client service | Playwright F04-H7 |
 | Ajout d'un moyen de contact | `/admin/contact` : un type absent (WhatsApp, téléphone, e-mail) s'ajoute, un seul par type | Playwright F04-H8 |
-| Vérification des liens | `src/lib/links/` ; `after()` après chaque enregistrement des dons et des réseaux, bouton du tableau de bord, `GET /api/liens/verifier` (Vercel Cron, `CRON_SECRET`, client service) → table `link_checks` | Vitest (29), Playwright F04-H1 et F04-H9 |
+| Vérification des liens | `src/lib/links/` ; `after()` après chaque enregistrement des dons et des réseaux, bouton du tableau de bord, `GET /api/liens/verifier` (cron hPanel via `scripts/cron-verifier-liens.sh`, `CRON_SECRET`, client service) → table `link_checks` | Vitest (29), Playwright F04-H1 et F04-H9 |
 | Sauvegarde | `GET /admin/sauvegarde` : JSON en pièce jointe (textes, réseaux, contacts, dons, lien de la photo) | Playwright F04-H9 (refus sans session : 307 vers la connexion) |
 | Code qui n'arrive pas | `/admin/connexion` : conseils, « Renvoyer le code » inactif 60 s (`intent=resend`) | Playwright F04-E6 |
 | Ajout d'un admin | `pnpm admin:add <email> [owner\|editor]` | `marcel@exemple.test` (owner) créé en local |
@@ -46,7 +46,12 @@ Après un changement de `src/content.ts` : `pnpm db:seed` puis `pnpm db:reset`.
 3. **Auth > URL Configuration** : Site URL = l'adresse du site ; Redirect URLs = `https://<domaine>/admin/auth/callback`.
 4. **Auth > Email Templates > Magic Link** : coller `supabase/templates/magic-link.html`, sujet « Votre code de connexion ».
 5. **SMTP** : brancher Resend (domaine du site, SPF/DKIM). Sans lui, Supabase n'envoie que quelques e-mails par heure.
-6. **Vercel** : les 5 variables de `.env.example`. `SUPABASE_SERVICE_ROLE_KEY` et `CRON_SECRET` restent côté serveur (jamais `NEXT_PUBLIC_`). `vercel.json` déclare la tâche quotidienne `/api/liens/verifier` (6 h UTC) ; Vercel envoie `CRON_SECRET` dans l'en-tête Authorization.
+6. **Hostinger (application web Node.js, plan Business ou Cloud)** : détail dans le README, « Mise en ligne sur Hostinger ».
+   - Node.js 22 (minimum 20.9, `engines` de `package.json`) ; build `pnpm build`, démarrage `pnpm start`.
+   - Les 5 variables de `.env.example`, saisies **avant** le build (les `NEXT_PUBLIC_*` sont figées au build). `SUPABASE_SERVICE_ROLE_KEY` et `CRON_SECRET` restent côté serveur (jamais `NEXT_PUBLIC_`).
+   - Domaine : `NEXT_PUBLIC_SITE_URL` = l'adresse canonique (sans `www`, sauf choix contraire). Hostinger fait tourner `www` et le domaine nu dans deux processus séparés, chacun avec son cache : `src/proxy.ts` redirige le jumeau (308) pour qu'une modification de l'admin soit visible partout.
+   - Tâche quotidienne : hPanel > Avancé > Cron Jobs > Custom, `0 6 * * *` (UTC), commande `/bin/sh <chemin du site>/scripts/cron-verifier-liens.sh` ; le script lit `SITE_URL` et `CRON_SECRET` dans `~/.vitrine-cron` (chmod 600). Hostinger refuse guillemets et redirections dans le champ, d'où le script.
+   - Après le premier déploiement : les vérifications « Après déploiement » de `test-plan.md`.
 7. `pnpm admin:add <e-mail de Marcel> owner` avec les variables de production.
 8. **pg_cron** : activer l'extension, puis la purge des statistiques (commentée en fin de migration) quand `/api/evenements` existera.
 9. **Sauvegardes** : vérifier les sauvegardes quotidiennes du plan Supabase (le plan gratuit met aussi le projet en pause après 7 jours sans activité).
@@ -58,16 +63,16 @@ Après un changement de `src/content.ts` : `pnpm db:seed` puis `pnpm db:reset`.
 - [x] requêtes sortantes du serveur (vérification des liens saisis dans l'admin) : https et port 443 seulement, chaque adresse résolue doit être publique (pas de 10/8, 127/8, 169.254/16, ::1, fc00::/7…), revérifiée à chaque redirection (3 au plus), 5 s, seul le code HTTP est gardé ; limite connue : une résolution DNS qui change entre la vérification et la requête n'est pas bloquée (le contenu n'étant jamais renvoyé, l'attaque resterait aveugle)
 - [x] `/admin/sauvegarde` : session admin vérifiée dans la route (le proxy n'est qu'un tri) ; `/api/liens/verifier` : secret comparé en temps constant
 - [x] autorisation vérifiée à chaque lecture et écriture : RLS sur toutes les tables + `requireAdmin()` dans chaque page et action ; testé avec un second compte (pgTAP + Playwright)
-- [x] limites de débit sur l'auth : celles de Supabase Auth (envoi d'e-mails, vérifications de code) ; `/api/evenements` : 60 / min par adresse, en mémoire donc par instance (suffisant contre une boucle, pas contre une attaque répartie)
+- [x] limites de débit sur l'auth : celles de Supabase Auth (envoi d'e-mails, vérifications de code) ; `/api/evenements` : 60 / min par adresse, en mémoire donc par processus (suffisant contre une boucle, pas contre une attaque répartie)
 - [x] webhooks : aucun
 - [x] envois de fichiers : bucket `public-media` limité à 5 Mo et PNG / WebP / JPEG ; l'action vérifie aussi taille, format réel (octets) et dimensions ; ancien fichier supprimé
 - [x] pas de donnée personnelle dans les URL ni les journaux (l'e-mail ne passe jamais dans l'URL ; les erreurs journalisées n'en contiennent pas)
 - [x] dépendances auditées (`pnpm audit`) : 0 en production ; 1 modérée en développement (`minimatch` via eslint-config-next, non livrée)
-- [x] politique de confidentialité listant les sous-traitants : `/confidentialite` (Vercel, Supabase, Resend pour les e-mails de connexion de l'admin) ; relecture juridique recommandée avant la mise en ligne
+- [x] politique de confidentialité listant les sous-traitants : `/confidentialite` (Hostinger, Supabase, Resend pour les e-mails de connexion de l'admin) ; relecture juridique recommandée avant la mise en ligne
 
 ## Reste à faire
 
 - SMTP Resend en production (étape 5) et test d'un vrai e-mail (F04-M1).
 - pg_cron : activer la purge des statistiques (étape 8).
 - Relecture juridique de `/confidentialite` (texte court et vrai, pas validé par un juriste) ; y confirmer la ligne Resend une fois le SMTP branché, et passer « prévus pour être effacés au bout de 13 mois » au présent quand pg_cron tourne.
-- `CRON_SECRET` dans Vercel (étape 6) : sans lui, la vérification quotidienne des liens est désactivée (la vérification après enregistrement et le bouton du tableau de bord marchent quand même).
+- `CRON_SECRET` dans Hostinger et la tâche cron hPanel (étape 6) : sans lui, la vérification quotidienne des liens est désactivée (la vérification après enregistrement et le bouton du tableau de bord marchent quand même).

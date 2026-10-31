@@ -1,10 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
+import { countryOf, sameOrigin } from "@/lib/request-host";
 import { createServiceClient, isServiceConfigured } from "@/lib/supabase/service-client";
 
 // Statistiques sans cookie, sans IP stockée, sans identifiant de visiteur : un événement = type, cible, page,
-// pays (en-tête de l'hébergeur) et type d'appareil. L'IP ne sert qu'à limiter le débit, en mémoire.
+// pays (en-tête du réseau, s'il existe) et type d'appareil. L'IP ne sert qu'à limiter le débit, en mémoire.
 
 const eventSchema = z.object({
   kind: z.enum(["page_view", "social", "whatsapp", "phone", "donation", "cta"]),
@@ -46,8 +47,7 @@ export async function POST(request: NextRequest) {
   if (!isServiceConfigured()) return noContent();
 
   // Envoi depuis une autre origine : refusé (le site seul compte ses visites).
-  const origin = request.headers.get("origin");
-  if (origin && new URL(origin).host !== request.headers.get("host")) return new NextResponse(null, { status: 403 });
+  if (!sameOrigin(request.headers)) return new NextResponse(null, { status: 403 });
 
   const userAgent = request.headers.get("user-agent") ?? "";
   if (userAgent === "" || BOTS.test(userAgent)) return noContent();
@@ -68,14 +68,13 @@ export async function POST(request: NextRequest) {
   const parsed = eventSchema.safeParse(json);
   if (!parsed.success) return new NextResponse(null, { status: 400 });
 
-  const country = request.headers.get("x-vercel-ip-country");
   const { error } = await createServiceClient()
     .from("click_events")
     .insert({
       kind: parsed.data.kind,
       target: parsed.data.target ?? null,
       path: parsed.data.path,
-      country: country && /^[A-Z]{2}$/.test(country) ? country : null,
+      country: countryOf(request.headers),
       device: deviceOf(userAgent),
     });
   if (error) {

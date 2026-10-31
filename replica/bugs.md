@@ -87,5 +87,5 @@ Status: open, pas corrigé. Vient du rendu des métadonnées de Next après une 
 
 ## À vérifier (non reproduit)
 
-- Limite de débit de `/api/evenements` : en mémoire, par instance de serveur. Sur Vercel, plusieurs instances = limite plus haute que 60 / minute. Suffisant contre une boucle, pas contre une attaque répartie (noté dans `backend.md`).
+- Limite de débit de `/api/evenements` : en mémoire, par processus de serveur. Chez Hostinger, un processus par domaine ; avec la redirection `www` vers le domaine nu, un seul reçoit les visites. Si l'hébergeur en lance plusieurs, la limite réelle dépasse 60 / minute. Suffisant contre une boucle, pas contre une attaque répartie (noté dans `backend.md`).
 - Lien de paiement réel (Wave / Orange Money) : le comportement au retour après paiement dépend du service.

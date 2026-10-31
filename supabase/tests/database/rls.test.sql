@@ -9,9 +9,11 @@ values ('11111111-1111-1111-1111-111111111111', 'rls-admin@exemple.test', 'authe
        ('22222222-2222-2222-2222-222222222222', 'rls-visiteur@exemple.test', 'authenticated', 'authenticated');
 insert into public.admin_users (user_id, email, role)
 values ('11111111-1111-1111-1111-111111111111', 'rls-admin@exemple.test', 'owner');
+-- Point de départ connu (la base locale garde les données des tests e2e, dont un réseau masqué par F04-H5 ; tout est
+-- annulé par le rollback final).
+delete from public.social_links where not visible;
 insert into public.social_links (network, handle, url, action_label, fallback_label, visible, position)
 values ('x', 'compte-masque', 'https://x.com/compte-masque', 'Suivre', 'Me suivre', false, 9);
--- Point de départ connu (la base locale garde les événements des tests e2e ; tout est annulé par le rollback final).
 delete from public.click_events;
 delete from public.link_checks;
 insert into public.click_events (kind, target) values ('social', 'facebook');

@@ -36,7 +36,7 @@ export default function ConfidentialitePage() {
           <ul className="mt-2 list-disc pl-5">
             <li>le type d’événement et le bouton concerné ;</li>
             <li>la page visitée ;</li>
-            <li>le pays, déduit par l’hébergeur, sans ville ni adresse ;</li>
+            <li>le pays, quand le réseau qui sert le site l’indique, sans ville ni adresse ;</li>
             <li>le type d’appareil : téléphone, tablette ou ordinateur ;</li>
             <li>la date et l’heure.</li>
           </ul>
@@ -51,7 +51,7 @@ export default function ConfidentialitePage() {
             Les services utilisés
           </h2>
           <ul className="mt-2 list-disc pl-5">
-            <li>Vercel héberge le site.</li>
+            <li>Hostinger héberge le site.</li>
             <li>Supabase stocke les textes du site, la photo et les chiffres anonymes ci-dessus.</li>
             <li>Resend envoie les e-mails de connexion à l’administration. Les visiteurs ne reçoivent jamais d’e-mail.</li>
             <li>Les polices de caractères sont servies par le site lui-même, sans appel à un service extérieur.</li>

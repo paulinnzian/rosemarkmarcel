@@ -10,7 +10,7 @@ Chaque spec Playwright échoue aussi sur toute erreur console, exception ou rép
 | suite | cas | passés | échoués |
 | --- | --- | --- | --- |
 | Playwright (`e2e/`), 3 passages consécutifs | 25 | 25 × 3 | 0 |
-| Vitest (`src/**/*.test.ts`) | 48 | 48 | 0 |
+| Vitest (`src/**/*.test.ts`) | 56 | 56 | 0 |
 | pgTAP (`supabase/tests/database/rls.test.sql`) | 29 | 29 | 0 |
 | Lighthouse mobile (local, 3 mesures) | 4 catégories | perf 96-97, a11y 100, bonnes pratiques 100, SEO 100 | — |
 
@@ -57,6 +57,10 @@ Bugs trouvés : 5 (S2 : 1, S3 : 2, S4 : 2) ; 4 corrigés, BUG-005 (S4, Next) ouv
 | F04-E4 | | envoi avant chargement du JavaScript | | boutons inactifs jusqu’à l’hydratation (`useHydrated`) | revue de code | ok |
 | F04-M1 | | e-mail réel | recevoir le code sur un vrai téléphone via le SMTP de production | e-mail en boîte de réception, pas en spam | manuel | à faire en production |
 | RLS-1 à 29 | base | accès | anonyme, connecté non admin, admin | lecture publique seule, écritures refusées, statistiques, fichiers et vérification des liens réservés aux admins | pgTAP | ok |
+| D-1 | site | après déploiement : `www` | `curl -sI https://www.<domaine>/confidentialite` | 308 vers `https://<domaine>/confidentialite` | manuel | à faire après la mise en ligne (en local : curl avec `Host: www.…`, 308) |
+| D-2 | admin | après déploiement : redirections derrière le proxy | ouvrir `https://<domaine>/admin` sans session, puis se déconnecter | arrivée sur `https://<domaine>/admin/connexion`, jamais sur une adresse interne ou en `http` | manuel | à faire après la mise en ligne (en local, avec `X-Forwarded-Host` et `X-Forwarded-Proto` : bonne adresse) |
+| D-3 | statistiques | après déploiement : origine | visiter le site, puis `/admin/statistiques` | la visite est comptée (pas de 403 sur `/api/evenements` dans la console) ; pays vide sans Cloudflare | manuel | à faire après la mise en ligne |
+| D-4 | liens | après déploiement : cron | lancer la tâche une fois depuis hPanel | « Dernière vérification » à jour sur le tableau de bord | manuel | à faire après la mise en ligne (script testé en local : 0 avec le bon secret, 22 / HTTP 401 avec un faux) |
 | M-VO | admin | lecteur d'écran | VoiceOver sur iPhone : connexion, dons, réseaux, onglets du bas et menu « Plus » | chaque contrôle annoncé avec son nom et son état | manuel | à faire sur un vrai iPhone (fixes.md #7) |
 
 ## Tests unitaires (Vitest)
@@ -64,4 +68,5 @@ Bugs trouvés : 5 (S2 : 1, S3 : 2, S4 : 2) ; 4 corrigés, BUG-005 (S4, Next) ouv
 - `src/lib/admin/image-info.test.ts` (7) : PNG avec ou sans transparence (bloc tRNS), JPEG, WebP VP8X et VP8L, faux fichier.
 - `src/lib/admin/stats.test.ts` (4) : jours en UTC (fin de mois, 29 février), totaux, jours vides, données hors période.
 - `src/lib/links/check.test.ts` (29) : adresses publiques ou refusées (privé, boucle locale, 169.254, IPv6 locale, IPv4 dans IPv6), classement des réponses (404, réseaux à page de connexion, 401 / 403 / 429 / 999, 5xx, panne réseau), redirections (3 au plus, chacune revérifiée), http et port refusés, HEAD refusé puis GET.
+- `src/lib/request-host.test.ts` (8) : hôte public (`x-forwarded-host`), adresse de redirection, origine des statistiques (proxy, autre site, « null »), redirection du jumeau `www` dans les deux sens, pays (Cloudflare, CloudFront, Vercel, « XX »).
 - `src/lib/admin/form-values.test.ts` (8) : lecture des champs (lignes, paragraphes, titres, champs vides) et règles du contenu (couleur du titre, 4 lignes, https, dons sans lien).
