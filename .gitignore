@@ -49,8 +49,3 @@ next-env.d.ts
 /e2e/.auth
 /test-results
 /playwright-report
-
-# replica-diff : découpes et conversions régénérables
-/replica/diffs/original-*.png
-/replica/diffs/sections/*-orig.png
-/replica/diffs/sections/*-clone.png
