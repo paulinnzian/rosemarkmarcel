@@ -18,7 +18,7 @@ Expected: aucune violation.
 Actual: `label-content-name-mismatch` sur les 4 cartes : le nom forcé (« Facebook, 340 000 abonnés… ») ne contient pas « 340 K » lu à l’écran (WCAG 2.5.3, une personne en commande vocale dit ce qu’elle voit).
 Evidence: test F01-H1, sortie axe `label-content-name-mismatch : a[data-track-target="facebook"], …`
 Suspected cause: `aria-label` posé à la main sur le lien.
-Status: fixed (voir le commit « test » de ce jour) : le nom vient du texte visible, plus « (nouvel onglet) » pour les lecteurs d’écran.
+Status: fixed in 3113d09 (test : 26155d2) : le nom vient du texte visible, plus « (nouvel onglet) » pour les lecteurs d’écran.
 
 ### BUG-002 : les anciennes photos ne sont jamais supprimées du stockage
 
@@ -35,7 +35,7 @@ Expected: dossier vide.
 Actual: 2 fichiers restent, sans aucune erreur dans les journaux.
 Evidence: test F04-H3 (`expect(objects).toHaveLength(0)`, reçu 2).
 Suspected cause: Supabase Storage cherche les fichiers à supprimer avec un SELECT soumis à RLS ; aucune politique SELECT sur `storage.objects`, donc `remove()` ne trouve rien et répond « succès ».
-Status: fixed : migration `20261031150000_lecture_media_admins.sql` (lecture réservée aux admins) + 3 tests pgTAP.
+Status: fixed in 3113d09 : migration `20261031150000_lecture_media_admins.sql` (lecture réservée aux admins) + 3 tests pgTAP.
 
 ### BUG-003 : une erreur de validation efface ce que l’admin vient de saisir
 
@@ -52,7 +52,7 @@ Expected: le message d’erreur s’affiche et les champs gardent ce qui a été
 Actual: le message s’affiche mais tous les champs reviennent à la valeur enregistrée (lien vide, interrupteur décoché). Sur l’écran des textes, un long paragraphe retapé sur téléphone est perdu à la première erreur.
 Evidence: test F04-H1 (`toHaveValue("http://paiement.exemple.test/marcel")`, reçu `""`) ; capture d’erreur Playwright : interrupteur décoché après l’envoi.
 Suspected cause: React 19 réinitialise automatiquement un `<form action={…}>` après chaque action, réussie ou non.
-Status: fixed : `src/lib/admin/use-admin-form.ts` (envoi par onSubmit dans une transition, sans réinitialisation), utilisé par les 8 formulaires.
+Status: fixed in 3113d09 : `src/lib/admin/use-admin-form.ts` (envoi par onSubmit dans une transition, sans réinitialisation), utilisé par les 8 formulaires.
 
 ### BUG-004 : apostrophe droite dans deux messages d’erreur
 
@@ -67,7 +67,7 @@ Steps
 Expected: « Collez un lien de paiement avant d’activer les dons. » (apostrophe typographique, comme le reste du site).
 Actual: « avant d'activer » (apostrophe droite) ; même chose pour « d'un texte de remplacement ».
 Evidence: test F04-H1 (texte introuvable avec ’).
-Status: fixed dans `src/content/schema.ts`.
+Status: fixed in 3113d09 (`src/content/schema.ts`).
 
 ## À vérifier (non reproduit)
 
