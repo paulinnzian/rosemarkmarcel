@@ -1,0 +1,133 @@
+import { siteContentSchema } from "@/content/schema";
+
+// Valeurs initiales du site (contenus de Marcel, repris avec son accord).
+// Elles alimentent seed.sql ; ensuite, tout se modifie dans l'admin.
+export const seedContent = siteContentSchema.parse({
+  creatorName: "Rosemark Marcel",
+  tagline: "Humour & bonne humeur",
+  roleLine: "Web humoriste · Créateur du Repos",
+  conceptName: "Le Repos",
+  nav: [
+    { label: "À propos", href: "#a-propos" },
+    { label: "Mon univers", href: "#univers" },
+    { label: "La communauté", href: "#communaute" },
+    { label: "Collaborations", href: "#contact" },
+  ],
+  hero: {
+    heading: { lines: ["Un peu de rire.", "Beaucoup", "de Repos."], highlightFrom: 1 },
+    intro: "Moi, c’est Rosemark Marcel. Bienvenue dans mon univers, là où l’humour prend toute sa place.",
+    primaryCta: { label: "Entrez dans l’univers ↗", href: "#communaute" },
+  },
+  photo: {
+    src: "/images/marcel-detoure.webp",
+    alt: "Rosemark Marcel dans sa tenue bleue, blanche et orange du concept Le Repos",
+    width: 1024,
+    height: 1535,
+  },
+  photoLabel: { kicker: "Le concept signé Marcel", text: "Le Repos ✦" },
+  marquee: ["On se retrouve pour rire", "Le Repos", "La bonne humeur se partage", "Rosemark Marcel"],
+  about: {
+    kicker: "À propos",
+    heading: { lines: ["Moi, c’est", "Rosemark Marcel."], highlightFrom: 1 },
+    subtitle: "Web humoriste & créateur du concept « Le Repos »",
+    paragraphs: [
+      "Bienvenue dans mon univers ! Je suis Rosemark Marcel, web humoriste et créateur du concept « Le Repos ». À travers mes contenus, je vous invite à partager des moments de rire et de bonne humeur.",
+      "Ma tenue bleue, blanche et orange fait partie de l’identité du « Repos ». Vous pouvez retrouver mon univers sur Facebook, Instagram, TikTok et YouTube.",
+      "Merci à toutes celles et à tous ceux qui suivent mes contenus et soutiennent cette aventure.",
+    ],
+    cta: { label: "Retrouvez-moi sur les réseaux ↗", href: "#communaute" },
+  },
+  community: {
+    kicker: "01 / La communauté",
+    heading: { lines: ["Le rire nous rassemble."], highlightFrom: null },
+    intro: "Rejoignez-moi sur les réseaux pour retrouver mes contenus et suivre l’aventure.",
+    countersSourceLabel: "Chiffres communiqués par Marcel",
+  },
+  universe: {
+    kicker: "02 / Mon univers",
+    heading: { lines: ["Une tenue.", "Tout un concept."], highlightFrom: null },
+    cardText: ["Ça, c’est", "Le Repos."],
+    paragraphs: [
+      "« Le Repos », c’est le concept que j’ai créé. Une identité à retrouver jusque dans ma tenue : du bleu, du blanc et une touche d’orange.",
+      "Un univers à découvrir, des moments à partager et toujours une place pour la bonne humeur.",
+    ],
+    cta: { label: "Retrouvez mes contenus ↗", href: "https://www.facebook.com/profile.php?id=100064043561730" },
+  },
+  contact: {
+    kicker: "04 / Collaborations",
+    heading: { lines: ["Et si on créait", "quelque chose ensemble ?"], highlightFrom: null },
+    intro: "Une marque, un projet, une idée ? Contactez-moi pour discuter de votre collaboration.",
+    note: "Contact professionnel · Collaborations",
+  },
+  footerLine: "Le Repos · L’humour, tout simplement.",
+  socials: [
+    {
+      network: "facebook",
+      name: "Facebook",
+      handle: "Rosemark Marcel",
+      url: "https://www.facebook.com/profile.php?id=100064043561730",
+      followers: 340_000,
+      actionLabel: "Rejoindre la communauté",
+      visible: true,
+    },
+    {
+      network: "instagram",
+      name: "Instagram",
+      handle: "marcel_rosemark_officiel",
+      url: "https://www.instagram.com/marcel_rosemark_officiel",
+      followers: 55_600,
+      actionLabel: "Suivre mon univers",
+      visible: true,
+    },
+    {
+      network: "tiktok",
+      name: "TikTok",
+      handle: "rosemarkmarcel",
+      url: "https://www.tiktok.com/@rosemarkmarcel",
+      followers: 393_400,
+      actionLabel: "Rejoindre mon TikTok",
+      visible: true,
+    },
+    {
+      network: "youtube",
+      name: "YouTube",
+      handle: "RosemarkMarcelOfficiel",
+      url: "https://www.youtube.com/@RosemarkMarcelOfficiel/videos",
+      followers: null,
+      actionLabel: "Découvrir la chaîne officielle",
+      fallbackLabel: "Mes vidéos",
+      fallbackSublabel: "Découvrir la chaîne officielle",
+      visible: true,
+    },
+  ],
+  contacts: [
+    {
+      type: "whatsapp",
+      value: "+2250706400690",
+      display: "+225 07 06 40 06 90",
+      label: "Discuter sur WhatsApp ↗",
+      prefilledMessage: "Bonjour Marcel, je souhaite vous contacter pour une collaboration.",
+    },
+    { type: "phone", value: "+2250706400690", display: "+225 07 06 40 06 90", label: "Appeler Marcel" },
+  ],
+  donation: {
+    enabled: false,
+    paymentUrl: null,
+    buttonLabel: "Soutenir Marcel ♡",
+    floatingLabel: "Me soutenir ♡",
+    texts: {
+      kicker: "03 / Un geste qui compte",
+      heading: { lines: ["Vous aimez rire", "avec moi ? ♡"], highlightFrom: null },
+      text: "Vous pouvez soutenir mon travail avec un don libre. Chaque geste m’encourage à continuer cette aventure avec vous. Merci pour la force !",
+      cardTitle: ["Un peu de soutien,", "beaucoup de motivation."],
+      cardText: "Un don libre, selon votre envie et vos moyens.",
+      thanks: "Merci de faire partie de l’aventure.",
+    },
+    disabledModal: {
+      kicker: "Merci pour votre soutien ♡",
+      title: "Les dons arrivent bientôt.",
+      text: "Le lien de paiement sera ajouté prochainement. En attendant, retrouvez Marcel sur ses réseaux.",
+      close: "Fermer",
+    },
+  },
+});

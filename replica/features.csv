@@ -1,0 +1,69 @@
+feature,area,priority,original,clone,notes
+Page unique avec 6 sections ancrées (#accueil #a-propos #univers #communaute #contact #soutenir),structure,must,yes,yes,l'original n'a pas d'id #accueil (logo -> #) : à ajouter ; build : id accueil ajouté sur le héros ; ordre affiché de l'original
+Défilement doux vers les ancres avec décalage sous l'en-tête,structure,must,yes,yes,respecter prefers-reduced-motion
+En-tête avec logo texte (nom + accroche),S00 navigation,must,yes,yes,
+Navigation par ancres sur mobile sans menu burger,S00 navigation,must,yes,yes,l'original met 4 liens sur une ligne ; à confirmer en design : ligne défilante ou burger si plus de 4 liens ; build : rangée qui défile horizontalement au-delà de 4 liens
+Navigation desktop alignée à droite,S00 navigation,must,yes,yes,
+Lien de nav actif selon la section visible,S00 navigation,could,no,no,absent de l'original
+Bouton « Soutenir Marcel » épinglé en bas d'écran pendant le défilement sur toutes les pages,S06 soutenir,must,yes,yes,"dans le layout racine ; ouvre le lien de paiement, ou la modale si le lien est vide ; zone de sécurité iPhone ; ne masque pas le pied de page ; build : SiteChrome : layout (site) et page 404 ; caché à l'impression"
+Héros : sur-titre avec pastille + H1 en 2 tons + intro,S01 accueil,must,yes,yes,
+Héros : bouton principal vers #communaute + lien secondaire vers #soutenir,S01 accueil,must,yes,yes,F01 et F03 démarrent ici
+Photo détourée du créateur sur fond pâle à coin arrondi,S01 accueil,must,yes,yes,"WebP, dimensions fixées, priorité de chargement (LCP) ; build : si la photo ne charge pas : cadre avec le nom"
+Étiquette inclinée sur la photo (concept + ✦),S01 accueil,should,yes,yes,
+Bandeau défilant de phrases en majuscules séparées par ✦,bandeau,should,yes,yes,"arrêté si prefers-reduced-motion ; build : statique comme l'original (choix /replica-design, WCAG 2.2.2)"
+À propos : titre 2 tons + sous-titre + 3 paragraphes + lien vers #communaute,S02 a-propos,must,yes,yes,
+Mon univers : carte visuelle du concept + titre + texte + lien externe,S03 univers,must,yes,yes,
+Communauté : cartes réseaux (nom + ↗ + compteur + libellé d'action),S04 communaute,must,yes,yes,F01
+Carte réseau sans compteur (texte de remplacement),S04 communaute,must,yes,yes,vu sur YouTube : « Mes vidéos »
+Compteur absent pour tous les réseaux,S04 communaute,must,no,yes,"état demandé par le brief ; la grille reste lisible ; build : mention de source masquée ; vérifié sur /design, pas sur l'accueil"
+"Format des compteurs en français (340 K / 55,6 K / 1,2 M)",S04 communaute,must,yes,yes,Intl.NumberFormat fr-FR compact
+Mention de la source des chiffres (manuel / synchro auto),S04 communaute,must,yes,partial,« Synchronisation automatique non activée » ; build : mention manuelle + date si renseignée ; variante « synchro auto » quand la synchro existera
+Réseau masqué si pas d'URL ou visible=false,S04 communaute,must,no,yes,"build : visible=false filtré ; URL https obligatoire dans le schéma ; vérifié dans le code, pas en capture"
+Liens réseaux ouverts dans un nouvel onglet avec rel=noopener,S04 communaute,must,yes,yes,
+Date de mise à jour des compteurs,S04 communaute,could,no,yes,build : affichée quand updatedAt est renseigné (admin) ; aucune date dans les valeurs initiales
+Synchronisation automatique des compteurs via API officielles,S04 communaute,could,no,no,pas de scraping ; dépend des accès API de chaque plateforme ; ISR / revalidation
+Collaborations : bouton WhatsApp avec message pré-rempli encodé,S05 contact,must,yes,yes,F02 ; wa.me/<E.164>?text=
+Collaborations : numéro cliquable tel:,S05 contact,must,yes,yes,F02
+Contact sans WhatsApp (téléphone seul) ou e-mail,S05 contact,should,no,yes,"build : chaque canal affiché seulement s'il existe ; vérifié dans le code, pas en capture"
+Soutenir : bloc don libre (titre + texte + carte + bouton),S06 soutenir,must,yes,yes,F03
+Dons désactivés : modale « Les dons arrivent bientôt » avec bouton Fermer,S06 soutenir,must,yes,yes,M01 ; affichée quand donation.paymentUrl est vide
+Modale accessible : focus sur Fermer + Échap + focus piégé + retour du focus,S06 soutenir,must,partial,yes,"focus initial vu ; Échap et piège non vérifiés ; build : <dialog> natif : focus sur Fermer, Échap, retour du focus vérifiés au navigateur"
+Dons activés : tous les boutons de soutien ouvrent le lien de paiement collé dans l'admin,S06 soutenir,must,no,partial,donation_settings.payment_url ; https obligatoire ; aucun prestataire intégré au code ; Jèko retiré le 2026-10-31 ; build : comportement en place (SupportButton) ; manque /admin/dons pour coller le lien
+Page de retour « merci » après un don,S06 soutenir,could,no,no,seulement si le service du lien de paiement permet une URL de retour
+Montants suggérés en FCFA en plus du don libre,S06 soutenir,skip,no,skip,un lien de paiement fixe : le montant se choisit chez le service de paiement
+Pied de page : nom + accroche + © année,pied,must,yes,yes,année calculée automatiquement
+Contenus en base Supabase modifiables depuis l'admin ; content.ts = valeurs initiales (seed),config,must,no,partial,"site_content, social_links, contact_channels, donation_settings ; voir schema.sql ; build : getSiteContent() mis en cache (tag contenu) sur les valeurs initiales ; lecture Supabase en /replica-backend"
+Tout le contenu visible en français,config,must,yes,yes,lang=fr
+Responsive mobile d'abord (360-430 px) puis 2 colonnes desktop,structure,must,yes,yes,build : 390 et 1440 sans débordement horizontal
+Contraste WCAG AA sur tous les textes,accessibilité,must,partial,partial,à vérifier : petits textes gris sur fond crème ; build : tokens vérifiés en /replica-design ; audit complet en /replica-test
+Textes alternatifs et repères (header / nav / main / footer),accessibilité,must,yes,yes,
+Animations légères à l'apparition des sections,design,should,no,no,désactivées si prefers-reduced-motion
+Lighthouse mobile ≥ 90 et images WebP,performance,must,no,no,contrainte du brief
+Métadonnées de partage (Open Graph / WhatsApp aperçu),SEO,should,no,no,le lien circule surtout sur WhatsApp ; image d'aperçu 1200x630
+Balises title / description / favicon,SEO,should,yes,partial,build : title et description en place ; favicon par défaut de Next à remplacer
+Données structurées Person (schema.org),SEO,could,no,no,
+Mesure des vues et clics (réseaux / WhatsApp / appel / don) sans cookie ni IP stockée,analytics,must,no,no,click_events + sendBeacon ; robots filtrés ; purge après 13 mois
+Thème sombre,design,could,no,no,
+Lien « Retour en haut » ou logo cliquable vers #accueil,S00 navigation,should,yes,yes,
+Déploiement Vercel avec domaine personnalisé,deploy,should,no,no,/replica-deploy
+Nom et textes de Rosemark Marcel,identité,must,yes,yes,cas B : repris avec son accord ; saisis dans content.ts
+Photo détourée de Rosemark Marcel,identité,must,yes,yes,fichier source fourni par Marcel (pas téléchargé du site) ; converti en WebP
+Palette bleu / blanc / orange de sa tenue,identité,must,yes,yes,template validé par Marcel ; tokens reconstruits et vérifiés WCAG AA en /replica-design
+Concept « Le Repos » et phrases du bandeau,identité,must,yes,yes,cas B : repris avec son accord
+Liens des réseaux et numéro WhatsApp de Marcel,identité,must,yes,yes,dans content.ts ; vérifier avec lui que les liens et le numéro sont à jour ; build : à faire confirmer par Marcel
+Code de l'original,clean-room,skip,yes,skip,rien n'est lu ni copié ; tout est écrit de zéro ; captures dans replica/screens/ seulement
+Admin : connexion par lien magique ou code à 6 chiffres envoyé par e-mail (sans mot de passe),admin,must,no,no,Supabase Auth ; inscription libre désactivée ; SMTP Resend
+Admin : liste blanche des comptes (owner = Marcel),admin,must,no,no,admin_users ; un e-mail inconnu est refusé sans révéler la liste
+Admin : tableau de bord (vues et clics 7 / 30 jours + état des dons + dernières modifications),admin,must,no,no,/admin
+Admin : coller ou retirer le lien de paiement et activer ou désactiver les dons,admin,must,no,no,/admin/dons ; dons activés impossible sans lien ; bouton « tester le lien »
+Admin : réseaux (ajouter / modifier / masquer / réordonner) et compteurs d'abonnés,admin,must,no,no,/admin/reseaux ; date de mise à jour automatique
+Admin : textes des sections et phrases du bandeau,admin,must,no,no,/admin/contenus ; jsonb validé par Zod
+Admin : photo détourée (envoi PNG / WebP ≤ 5 Mo + texte alternatif + aperçu),admin,must,no,no,/admin/photo ; bucket public-media ; dimensions lues à l'envoi
+Admin : contact (WhatsApp / téléphone / e-mail / message pré-rempli),admin,must,no,no,/admin/contact ; numéro E.164 vérifié ; bouton « tester sur WhatsApp »
+Admin : statistiques par jour / type / réseau / appareil / pays,admin,must,no,no,/admin/statistiques ; vue click_daily en heure d'Abidjan
+Publication immédiate : la page publique se régénère à chaque enregistrement,admin,must,no,no,revalidateTag dans une seule fonction saveAndPublish
+Règles d'accès RLS : lecture publique et écriture réservée aux admins,sécurité,must,no,no,testé en local le 2026-10-31 (anon / non-admin / admin)
+Admin utilisable sur téléphone,admin,must,no,no,Marcel gère depuis son téléphone
+Admin : inviter ou retirer un gestionnaire (editor),admin,should,no,no,/admin/acces ; réservé à l'owner
+Admin : brouillon et aperçu avant publication,admin,could,no,no,
+Admin : historique des modifications,admin,could,no,no,
