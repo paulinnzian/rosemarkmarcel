@@ -1,0 +1,48 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 390,
+    "height": 237
+  },
+  "clone": {
+    "width": 390,
+    "height": 229
+  },
+  "compared_at": {
+    "width": 390,
+    "height": 229
+  },
+  "height_delta_pct": -3.4,
+  "score": 68.1,
+  "verdict": "partly",
+  "regions": [
+    {
+      "x": 128,
+      "y": 32,
+      "w": 32,
+      "h": 96,
+      "cells": 3,
+      "where": "top centre"
+    },
+    {
+      "x": 0,
+      "y": 96,
+      "w": 64,
+      "h": 32,
+      "cells": 2,
+      "where": "middle left"
+    },
+    {
+      "x": 64,
+      "y": 64,
+      "w": 32,
+      "h": 32,
+      "cells": 1,
+      "where": "top left"
+    }
+  ],
+  "files": {
+    "original": "replica/diffs/sections/pied-390-orig.png",
+    "clone": "replica/diffs/sections/pied-390-clone.png"
+  }
+}

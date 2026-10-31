@@ -17,7 +17,7 @@ Communauté : cartes réseaux (nom + ↗ + compteur + libellé d'action),S04 com
 Carte réseau sans compteur (texte de remplacement),S04 communaute,must,yes,yes,vu sur YouTube : « Mes vidéos »
 Compteur absent pour tous les réseaux,S04 communaute,must,no,yes,"état demandé par le brief ; la grille reste lisible ; build : mention de source masquée ; vérifié sur /design, pas sur l'accueil"
 "Format des compteurs en français (340 K / 55,6 K / 1,2 M)",S04 communaute,must,yes,yes,Intl.NumberFormat fr-FR compact
-Mention de la source des chiffres (manuel / synchro auto),S04 communaute,must,yes,partial,« Synchronisation automatique non activée » ; build : mention manuelle + date si renseignée ; variante « synchro auto » quand la synchro existera
+Mention de la source des chiffres (manuel / synchro auto),S04 communaute,must,yes,yes,"original : « Chiffres communiqués par … · Synchronisation automatique non activée. » ; clone : « Chiffres communiqués par Marcel · mis à jour le … » (même information : chiffres saisis à la main), texte modifiable dans l'admin ; la variante « synchro auto » relève de la ligne « Synchronisation automatique » (absente de l'original). Reclassé de partial à yes par /replica-diff le 2026-10-31"
 Réseau masqué si pas d'URL ou visible=false,S04 communaute,must,no,yes,"build : visible=false filtré ; URL https obligatoire dans le schéma ; vérifié dans le code, pas en capture"
 Liens réseaux ouverts dans un nouvel onglet avec rel=noopener,S04 communaute,must,yes,yes,
 Date de mise à jour des compteurs,S04 communaute,could,no,yes,build : affichée quand updatedAt est renseigné (admin) ; aucune date dans les valeurs initiales ; backend : followers_updated_at mis à jour quand le compteur change

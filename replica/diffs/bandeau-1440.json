@@ -1,0 +1,48 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 1440,
+    "height": 73
+  },
+  "clone": {
+    "width": 1440,
+    "height": 64
+  },
+  "compared_at": {
+    "width": 480,
+    "height": 21
+  },
+  "height_delta_pct": -12.5,
+  "score": 52.2,
+  "verdict": "partly",
+  "regions": [
+    {
+      "x": 960,
+      "y": 0,
+      "w": 360,
+      "h": 73,
+      "cells": 3,
+      "where": "middle right"
+    },
+    {
+      "x": 120,
+      "y": 0,
+      "w": 240,
+      "h": 73,
+      "cells": 2,
+      "where": "middle left"
+    },
+    {
+      "x": 600,
+      "y": 0,
+      "w": 120,
+      "h": 73,
+      "cells": 1,
+      "where": "middle centre"
+    }
+  ],
+  "files": {
+    "original": "replica/diffs/sections/bandeau-1440-orig.png",
+    "clone": "replica/diffs/sections/bandeau-1440-clone.png"
+  }
+}

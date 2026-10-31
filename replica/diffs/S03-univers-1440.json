@@ -1,0 +1,56 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 1440,
+    "height": 579
+  },
+  "clone": {
+    "width": 1440,
+    "height": 546
+  },
+  "compared_at": {
+    "width": 480,
+    "height": 182
+  },
+  "height_delta_pct": -5.7,
+  "score": 68.9,
+  "verdict": "partly",
+  "regions": [
+    {
+      "x": 360,
+      "y": 120,
+      "w": 240,
+      "h": 240,
+      "cells": 3,
+      "where": "middle left"
+    },
+    {
+      "x": 840,
+      "y": 360,
+      "w": 360,
+      "h": 120,
+      "cells": 3,
+      "where": "bottom right"
+    },
+    {
+      "x": 840,
+      "y": 0,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "top centre"
+    },
+    {
+      "x": 1200,
+      "y": 240,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "middle right"
+    }
+  ],
+  "files": {
+    "original": "replica/diffs/sections/S03-univers-1440-orig.png",
+    "clone": "replica/diffs/sections/S03-univers-1440-clone.png"
+  }
+}

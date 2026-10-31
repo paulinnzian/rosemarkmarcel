@@ -1,0 +1,64 @@
+{
+  "mode": "layout",
+  "original": {
+    "width": 1440,
+    "height": 526
+  },
+  "clone": {
+    "width": 1440,
+    "height": 531
+  },
+  "compared_at": {
+    "width": 480,
+    "height": 175
+  },
+  "height_delta_pct": 1.1,
+  "score": 83.3,
+  "verdict": "close",
+  "regions": [
+    {
+      "x": 240,
+      "y": 360,
+      "w": 360,
+      "h": 120,
+      "cells": 3,
+      "where": "bottom left"
+    },
+    {
+      "x": 480,
+      "y": 120,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "top centre"
+    },
+    {
+      "x": 720,
+      "y": 120,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "top centre"
+    },
+    {
+      "x": 960,
+      "y": 120,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "top right"
+    },
+    {
+      "x": 600,
+      "y": 240,
+      "w": 120,
+      "h": 120,
+      "cells": 1,
+      "where": "middle centre"
+    }
+  ],
+  "files": {
+    "original": "replica/diffs/sections/S06-soutenir-1440-orig.png",
+    "clone": "replica/diffs/sections/S06-soutenir-1440-clone.png"
+  }
+}
