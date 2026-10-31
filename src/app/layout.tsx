@@ -8,9 +8,15 @@ const interTight = Inter_Tight({
   display: "swap",
 });
 
+const description = "Rosemark Marcel, web humoriste et créateur du concept « Le Repos ». Un peu de rire, beaucoup de Repos.";
+
 export const metadata: Metadata = {
+  // Adresses absolues des aperçus de partage (og:image) ; sans NEXT_PUBLIC_SITE_URL, Next prend l'adresse locale.
+  metadataBase: process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL) : undefined,
   title: { default: "Rosemark Marcel — Le Repos", template: "%s · Rosemark Marcel" },
-  description: "Rosemark Marcel, web humoriste et créateur du concept « Le Repos ». Un peu de rire, beaucoup de Repos.",
+  description,
+  openGraph: { type: "website", locale: "fr_FR", siteName: "Rosemark Marcel", title: "Rosemark Marcel — Le Repos", description },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

@@ -69,6 +69,22 @@ Actual: « avant d'activer » (apostrophe droite) ; même chose pour « d'un tex
 Evidence: test F04-H1 (texte introuvable avec ’).
 Status: fixed in 3113d09 (`src/content/schema.ts`).
 
+### BUG-005 : le titre de l'onglet disparaît un instant après l'envoi du formulaire de connexion
+
+- Severity: S4
+- Flow / case: F04 / F04-E6
+- Screen: /admin/connexion
+- Build: build de production local (Next 16.4.3)  Browser / device: Chromium 1248
+
+Steps
+1. Ouvrir /admin/connexion, taper une adresse, toucher « Recevoir mon code ».
+2. Lire `document.title` et le nombre de balises `<title>` toutes les 100 ms.
+
+Expected: « Connexion · Administration » en permanence.
+Actual: juste après la réponse de l'action, aucune balise `<title>` (titre vide), puis le titre revient en moins de 100 ms. Reproduit 2 fois sur 2, sans horloge factice. Trouvé par l'analyse axe de F04-E6 (« document-title »), qui tombait dans cet intervalle.
+Evidence: sondage Playwright (`|0 ; Connexion · Administration|1 ; …`), échec intermittent de F04-E6.
+Status: open, pas corrigé. Vient du rendu des métadonnées de Next après une action serveur, pas du code du site ; sans effet pour un visiteur au-delà d'un clignotement de l'onglet. Le test attend le titre avant l'analyse axe. À revoir à la prochaine version de Next.
+
 ## À vérifier (non reproduit)
 
 - Limite de débit de `/api/evenements` : en mémoire, par instance de serveur. Sur Vercel, plusieurs instances = limite plus haute que 60 / minute. Suffisant contre une boucle, pas contre une attaque répartie (noté dans `backend.md`).

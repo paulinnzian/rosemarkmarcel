@@ -35,20 +35,22 @@ test.describe("F04 accès à l’administration", () => {
     expect(await mailCount("inconnu@exemple.test")).toBe(unknownBefore);
   });
 
-  test("F04-E6 code pas reçu : conseils, renvoi possible après une minute, le dernier code fonctionne", async ({ page }) => {
-    await page.clock.install();
+  test("F04-E6 code pas reçu : conseils, renvoi possible après une vraie minute, le dernier code fonctionne", async ({ page }) => {
+    // Vraie minute d'attente : avec l'horloge factice de Playwright, Next n'applique plus la réponse de l'action.
+    test.setTimeout(120_000);
     const before = await mailCount(OWNER);
     await requestCode(page, OWNER);
     await nextMail(OWNER, before);
     await expect(page.getByText(/indésirables \(spams\)/)).toBeVisible();
     const resend = page.getByRole("button", { name: /^Renvoyer le code/ });
     await expect(resend).toBeDisabled();
-    await expect(resend).toHaveText(/dans \d+ s/);
+    await expect(resend).toHaveText(/dans (60|59|58) s/);
+    // BUG-005 : Next retire le <title> quelques millisecondes après la réponse de l'action ; axe sur l'état stable.
+    await expect(page).toHaveTitle("Connexion · Administration");
     await expectAccessible(page);
 
-    await page.clock.runFor(61_000);
+    await expect(resend).toHaveText("Renvoyer le code", { timeout: 65_000 });
     await expect(resend).toBeEnabled();
-    await expect(resend).toHaveText("Renvoyer le code");
     await resend.click();
     await expect(page.locator("form").getByRole("status")).toContainText("nouveau code");
     await expect(resend).toBeDisabled();
@@ -140,6 +142,13 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
 
     await page.goto("/");
     await expect(page.getByRole("link", { name: /Me soutenir/ })).toHaveAttribute("href", "https://paiement.exemple.test/marcel");
+
+    // Vérifié après l'enregistrement (after()) : le nom .test ne se résout jamais, le lien est signalé sur le tableau de bord.
+    await expect
+      .poll(async () => (await serviceClient().from("link_checks").select("status").eq("url", "https://paiement.exemple.test/marcel").maybeSingle()).data?.status, { timeout: 30_000 })
+      .toBe("unreachable");
+    await page.goto("/admin");
+    await expect(page.getByRole("list", { name: "Liens à corriger" }).getByRole("listitem").filter({ hasText: "Lien de paiement des dons" })).toContainText("injoignable");
 
     // Retour à l'état initial : dons fermés, modale « bientôt ».
     await page.goto("/admin/dons");
@@ -356,6 +365,41 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await expect(page.getByRole("row", { name: /Téléphone/ })).toContainText("1");
     await expect(page.getByRole("row", { name: /Ordinateur/ })).toContainText("1");
     await expect(page.getByText(/^Comptage depuis le .+ Dernière activité enregistrée le/)).toBeVisible();
+    await expectAccessible(page);
+  });
+
+  test("F04-H9 sauvegarde et liens : fichier JSON pour l’admin seulement ; vérification à la demande et quotidienne", async ({ page, playwright }) => {
+    await page.goto("/admin");
+    const download = page.waitForEvent("download");
+    await page.getByRole("link", { name: "Télécharger une sauvegarde" }).click();
+    expect((await download).suggestedFilename()).toMatch(/^sauvegarde-site-\d{4}-\d{2}-\d{2}\.json$/);
+
+    const backup = await page.request.get("/admin/sauvegarde");
+    expect(backup.status()).toBe(200);
+    expect(backup.headers()["content-disposition"]).toMatch(/^attachment;/);
+    const body = await backup.json();
+    expect(body.siteContent.creator_name).toBeTruthy();
+    expect(body.socialLinks.length).toBeGreaterThan(0);
+    expect(body.donationSettings).toHaveProperty("payment_url");
+    expect(JSON.stringify(body)).not.toMatch(/admin_users|click_events/);
+
+    const anonymous = await playwright.request.newContext({ baseURL: "http://localhost:3100", storageState: { cookies: [], origins: [] } });
+    const refused = await anonymous.get("/admin/sauvegarde", { maxRedirects: 0 });
+    expect(refused.status()).toBe(307);
+    expect(refused.headers().location).toMatch(/\/admin\/connexion$/);
+
+    expect((await anonymous.get("/api/liens/verifier")).status()).toBe(401);
+    expect((await anonymous.get("/api/liens/verifier", { headers: { authorization: "Bearer mauvais-secret" } })).status()).toBe(401);
+    const cron = await anonymous.get("/api/liens/verifier", { headers: { authorization: `Bearer ${process.env.CRON_SECRET}` }, timeout: 60_000 });
+    expect(cron.status()).toBe(200);
+    expect((await cron.json()).checked).toBeGreaterThan(0);
+    await anonymous.dispose();
+
+    await serviceClient().from("link_checks").delete().neq("url", "");
+    await page.reload();
+    await expect(page.getByText(/^Pas encore vérifiés/)).toBeVisible();
+    await page.getByRole("button", { name: "Vérifier maintenant" }).click();
+    await expect(page.getByText(/^Dernière vérification :/)).toBeVisible({ timeout: 30_000 });
     await expectAccessible(page);
   });
 

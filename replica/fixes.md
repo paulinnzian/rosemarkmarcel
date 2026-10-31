@@ -95,6 +95,18 @@ Choisies par preuve × coût. Chacune ajoutée à `features.csv` (`original` = n
 | 6 | **Dire où va l'argent** dans la section « Soutenir » : « Le site ne prend rien sur votre don ; seuls les frais de votre service de paiement s'appliquent. » Texte modifiable dans l'admin, à valider par Marcel | S | /replica-build | thème 6 (13 avis, 2 sources) |
 | 7 | **Passage VoiceOver** sur l'admin, à la main, sur un iPhone (axe passe déjà sans violation) | S | /replica-test | thème 13 (mince : 5 avis, une source) |
 
+### Où en est le plan (2026-10-31)
+
+| # | état | où |
+| --- | --- | --- |
+| 1 | fait ; WhatsApp non testé : `wa.me` répond 200 pour n'importe quel numéro, le format du numéro est déjà validé à l'enregistrement | `src/lib/links/`, tableau de bord, `vercel.json` |
+| 2 | fait (côté site) ; reste le SMTP Resend de production, qui demande le compte de Marcel | `/admin/connexion` |
+| 3 | fait | `/admin/statistiques` |
+| 4 | fait ; relecture juridique recommandée | `/confidentialite` |
+| 5 | fait ; pas de restauration en un clic (le fichier se relit, ou se recharge en SQL) | `/admin/sauvegarde` |
+| 6 | fait ; phrase à valider par Marcel, modifiable ou masquable dans `/admin/dons` | section Soutenir |
+| 7 | **pas fait** : demande un vrai iPhone entre les mains de quelqu'un | — |
+
 Hors de ce plan : rien sur le prix ou la facturation (il n'y a rien à vendre) ; rien pour « être prévenu » (WhatsApp et le service de paiement le font).
 
 ## L'angle

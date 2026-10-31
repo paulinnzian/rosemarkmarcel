@@ -6,6 +6,7 @@ import { z } from "zod";
 import { fieldErrorsOf, type FormState } from "@/lib/admin/form-state";
 import { saveAndPublish } from "@/lib/admin/publish";
 import { requireAdmin } from "@/lib/admin/session";
+import { checkLinksAfterSave } from "@/lib/links/run";
 import { CONTENT_TAG } from "@/lib/site-data";
 
 import { newSocialLinkFormSchema, socialLinkFormSchema } from "./schema";
@@ -47,6 +48,7 @@ export async function addSocialLink(_previous: FormState, formData: FormData): P
       .select("id"),
   );
 
+  if (result.ok) checkLinksAfterSave(supabase);
   return result.ok
     ? { status: "saved", message: "Réseau ajouté en dernière position.", fieldErrors: {} }
     : { status: "error", message: result.message, fieldErrors: {} };
@@ -112,6 +114,7 @@ export async function updateSocialLink(_previous: FormState, formData: FormData)
       .select("id"),
   );
 
+  if (result.ok) checkLinksAfterSave(supabase);
   return result.ok
     ? { status: "saved", message: "Enregistré. La page publique est à jour.", fieldErrors: {} }
     : { status: "error", message: result.message, fieldErrors: {} };

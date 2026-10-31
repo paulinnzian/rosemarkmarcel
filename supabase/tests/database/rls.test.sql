@@ -13,6 +13,7 @@ insert into public.social_links (network, handle, url, action_label, fallback_la
 values ('x', 'compte-masque', 'https://x.com/compte-masque', 'Suivre', 'Me suivre', false, 9);
 -- Point de départ connu (la base locale garde les événements des tests e2e ; tout est annulé par le rollback final).
 delete from public.click_events;
+delete from public.link_checks;
 insert into public.click_events (kind, target) values ('social', 'facebook');
 insert into storage.objects (bucket_id, name) values ('public-media', 'photo/rls-test.png');
 insert into public.link_checks (url, label, status) values ('https://exemple.test/rls', 'Lien de test', 'broken');

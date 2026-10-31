@@ -5,6 +5,7 @@ import { fieldErrorsOf, type FormState } from "@/lib/admin/form-state";
 import { checkedOf, headingOf, optionalTextOf, textOf } from "@/lib/admin/form-values";
 import { saveAndPublish } from "@/lib/admin/publish";
 import { requireAdmin } from "@/lib/admin/session";
+import { checkLinksAfterSave } from "@/lib/links/run";
 
 export async function updateDonation(_previous: FormState, formData: FormData): Promise<FormState> {
   const { supabase } = await requireAdmin();
@@ -50,6 +51,7 @@ export async function updateDonation(_previous: FormState, formData: FormData): 
       .select("id"),
   );
   if (!result.ok) return { status: "error", message: result.message, fieldErrors: {} };
+  checkLinksAfterSave(supabase);
 
   return {
     status: "saved",

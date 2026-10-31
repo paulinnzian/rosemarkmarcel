@@ -59,3 +59,17 @@ Tests : `replica/test-plan.md` ; bugs : `replica/bugs.md`.
 | AdminShell | 2026-10-31 | fait | icônes d'onglets (texte seul, pas de dépendance Lucide) | « Plus » en popover natif : marche sans JavaScript, mais le popover ne se ferme pas tout seul après une navigation côté client, d'où `hidePopover()` au clic ; test F04-E5 écrit avant, vu en échec |
 
 Captures : `home-390.png`, `home-1440.png`, `modal-dons-390.png`, `admin-*-390.png` (barre d'onglets), `admin-plus-390.png`, `admin-dashboard-1440.png` (barre latérale) ; 0 erreur console.
+
+## Corrections de /replica-entrepreneur, 2026-10-31
+
+| ID | date | état | ce qui manque | plus dur que prévu |
+| --- | --- | --- | --- | --- |
+| #1 liens | 2026-10-31 | fait | WhatsApp non vérifié (wa.me répond toujours 200) | la garde contre les requêtes vers le réseau interne (chaque redirection revérifiée) ; Instagram et consorts répondent 200 pour un profil supprimé, d'où « non vérifiable » sauf 404 |
+| #2 connexion | 2026-10-31 | fait | SMTP Resend de production | l'horloge factice de Playwright (`page.clock`) : avec elle, Next n'applique plus la réponse de l'action de renvoi (vu avec `runFor`, `fastForward` et `resume`) ; le test attend donc une vraie minute ; BUG-005 (titre absent un instant après l'action, Next) trouvé au passage |
+| #3 statistiques | 2026-10-31 | fait | — | — |
+| #4 confidentialité | 2026-10-31 | fait | relecture juridique | ne rien écrire de faux : la purge à 13 mois est « prévue » tant que pg_cron n'est pas actif |
+| #5 sauvegarde | 2026-10-31 | fait | restauration en un clic | — |
+| #6 frais | 2026-10-31 | fait | validation de Marcel | — |
+| #7 VoiceOver | — | pas fait | un vrai iPhone | — |
+| ajout d'un contact | 2026-10-31 | fait | — | un seul canal par type : la section Contact en affiche un de chaque |
+| aperçu de partage | 2026-10-31 | fait | — | Satori ne lit pas le WebP : photo convertie en PNG (`src/assets/og-photo.png`) ; couleurs recopiées des tokens (Satori ne lit pas les variables CSS) |

@@ -5,7 +5,11 @@ Outils : `parity.py` et `imgdiff.py` de /replica-diff, sans modification.
 
 Historique : premier passage 91,7 (fonctionnel 99,0, mise en page 62,7) ; après les corrections 92,7 (100,0 et 63,6).
 
-## Verdict : livrable (shippable)
+## Verdict : meilleur que l'original (better than the original)
+
+Mise à jour du 2026-10-31, après les corrections de /replica-entrepreneur : 6 des 7 corrections sont faites (vérification des liens, aide quand le code n'arrive pas, statistiques datées, page Confidentialité, sauvegarde, phrase sur les frais), plus l'ajout d'un moyen de contact et l'aperçu de partage. Reste le passage VoiceOver sur un vrai iPhone. Parité fonctionnelle 100, 31 indispensables sur 31 ; Lighthouse mobile 96-97 / 100 / 100 / 100. Le détail ci-dessous date du passage précédent (verdict « livrable »).
+
+### Passage précédent : livrable (shippable)
 
 - Toutes les fonctionnalités indispensables de l'original sont faites : 31 sur 31.
 - Score fonctionnel : 100,0 (80 demandé).

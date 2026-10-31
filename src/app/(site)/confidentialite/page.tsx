@@ -53,6 +53,7 @@ export default function ConfidentialitePage() {
           <ul className="mt-2 list-disc pl-5">
             <li>Vercel héberge le site.</li>
             <li>Supabase stocke les textes du site, la photo et les chiffres anonymes ci-dessus.</li>
+            <li>Resend envoie les e-mails de connexion à l’administration. Les visiteurs ne reçoivent jamais d’e-mail.</li>
             <li>Les polices de caractères sont servies par le site lui-même, sans appel à un service extérieur.</li>
           </ul>
           <p className="mt-2">

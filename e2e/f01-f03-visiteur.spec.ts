@@ -64,6 +64,18 @@ test.describe("F01 un visiteur découvre le créateur et le suit sur un réseau"
   });
 });
 
+test("F01-E6 partage du lien : aperçu 1200 × 630 avec titre et description", async ({ page, request }) => {
+  await page.goto("/");
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Rosemark Marcel — Le Repos");
+  await expect(page.locator('meta[property="og:description"]')).toHaveAttribute("content", /web humoriste/);
+  await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute("content", "1200");
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+  const image = new URL((await page.locator('meta[property="og:image"]').getAttribute("content")) ?? "");
+  const response = await request.get(image.pathname + image.search);
+  expect(response.status()).toBe(200);
+  expect(response.headers()["content-type"]).toBe("image/png");
+});
+
 test.describe("F02 une marque contacte le créateur", () => {
   test("F02-H1 WhatsApp s’ouvre avec le message pré-rempli encodé", async ({ page }) => {
     await page.goto("/");

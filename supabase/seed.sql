@@ -14,7 +14,7 @@ on conflict (id) do update set
 
 insert into public.donation_settings (id, enabled, payment_url, button_label, floating_label, texts, disabled_modal)
 values (1, false, null, 'Soutenir Marcel ♡', 'Me soutenir ♡',
-        '{"kicker":"03 / Un geste qui compte","heading":{"lines":["Vous aimez rire","avec moi ? ♡"],"highlightFrom":null},"text":"Vous pouvez soutenir mon travail avec un don libre. Chaque geste m’encourage à continuer cette aventure avec vous. Merci pour la force !","cardTitle":["Un peu de soutien,","beaucoup de motivation."],"cardText":"Un don libre, selon votre envie et vos moyens.","thanks":"Merci de faire partie de l’aventure."}'::jsonb,
+        '{"kicker":"03 / Un geste qui compte","heading":{"lines":["Vous aimez rire","avec moi ? ♡"],"highlightFrom":null},"text":"Vous pouvez soutenir mon travail avec un don libre. Chaque geste m’encourage à continuer cette aventure avec vous. Merci pour la force !","cardTitle":["Un peu de soutien,","beaucoup de motivation."],"cardText":"Un don libre, selon votre envie et vos moyens.","thanks":"Merci de faire partie de l’aventure.","feeNote":"Le site ne prend rien sur votre don : seuls les frais de votre service de paiement s’appliquent."}'::jsonb,
         '{"kicker":"Merci pour votre soutien ♡","title":"Les dons arrivent bientôt.","text":"Le lien de paiement sera ajouté prochainement. En attendant, retrouvez Marcel sur ses réseaux.","close":"Fermer"}'::jsonb)
 on conflict (id) do update set
   enabled = excluded.enabled, payment_url = excluded.payment_url, button_label = excluded.button_label,
