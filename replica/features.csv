@@ -28,21 +28,21 @@ Contact sans WhatsApp (téléphone seul) ou e-mail,S05 contact,should,no,yes,"bu
 Soutenir : bloc don libre (titre + texte + carte + bouton),S06 soutenir,must,yes,yes,F03
 Dons désactivés : modale « Les dons arrivent bientôt » avec bouton Fermer,S06 soutenir,must,yes,yes,M01 ; affichée quand donation.paymentUrl est vide
 Modale accessible : focus sur Fermer + Échap + focus piégé + retour du focus,S06 soutenir,must,partial,yes,"focus initial vu ; Échap et piège non vérifiés ; build : <dialog> natif : focus sur Fermer, Échap, retour du focus vérifiés au navigateur"
-Dons activés : tous les boutons de soutien ouvrent le lien de paiement collé dans l'admin,S06 soutenir,must,no,partial,donation_settings.payment_url ; https obligatoire ; aucun prestataire intégré au code ; Jèko retiré le 2026-10-31 ; build : comportement en place (SupportButton) ; manque /admin/dons pour coller le lien
+Dons activés : tous les boutons de soutien ouvrent le lien de paiement collé dans l'admin,S06 soutenir,must,no,yes,"donation_settings.payment_url ; https obligatoire ; aucun prestataire intégré au code ; Jèko retiré le 2026-10-31 ; build : comportement en place (SupportButton) ; manque /admin/dons pour coller le lien ; admin 2026-10-31 : vérifié en e2e (F04-H1), le bouton épinglé ouvre le lien collé"
 Page de retour « merci » après un don,S06 soutenir,could,no,no,seulement si le service du lien de paiement permet une URL de retour
 Montants suggérés en FCFA en plus du don libre,S06 soutenir,skip,no,skip,un lien de paiement fixe : le montant se choisit chez le service de paiement
 Pied de page : nom + accroche + © année,pied,must,yes,yes,année calculée automatiquement
-Contenus en base Supabase modifiables depuis l'admin ; content.ts = valeurs initiales (seed),config,must,no,partial,"site_content, social_links, contact_channels, donation_settings ; voir schema.sql ; build : getSiteContent() mis en cache (tag contenu) sur les valeurs initiales ; lecture Supabase en /replica-backend ; backend : lecture Supabase + repli content.ts en place ; seul /admin/reseaux écrit pour l'instant"
+Contenus en base Supabase modifiables depuis l'admin ; content.ts = valeurs initiales (seed),config,must,no,yes,"site_content, social_links, contact_channels, donation_settings ; voir schema.sql ; build : getSiteContent() mis en cache (tag contenu) sur les valeurs initiales ; lecture Supabase en /replica-backend ; backend : lecture Supabase + repli content.ts en place ; seul /admin/reseaux écrit pour l'instant ; admin 2026-10-31 : tous les textes, la photo, les réseaux, le contact et les dons s'éditent"
 Tout le contenu visible en français,config,must,yes,yes,lang=fr
 Responsive mobile d'abord (360-430 px) puis 2 colonnes desktop,structure,must,yes,yes,build : 390 et 1440 sans débordement horizontal
-Contraste WCAG AA sur tous les textes,accessibilité,must,partial,partial,à vérifier : petits textes gris sur fond crème ; build : tokens vérifiés en /replica-design ; audit complet en /replica-test
+Contraste WCAG AA sur tous les textes,accessibilité,must,partial,yes,"à vérifier : petits textes gris sur fond crème ; build : tokens vérifiés en /replica-design ; audit complet en /replica-test ; /replica-test : scan axe WCAG 2.2 AA sans violation sur la page publique (390 et 1440), la 404, la connexion et les 8 écrans admin"
 Textes alternatifs et repères (header / nav / main / footer),accessibilité,must,yes,yes,
 Animations légères à l'apparition des sections,design,should,no,no,désactivées si prefers-reduced-motion
-Lighthouse mobile ≥ 90 et images WebP,performance,must,no,no,contrainte du brief
+Lighthouse mobile ≥ 90 et images WebP,performance,must,no,yes,"contrainte du brief ; 2026-10-31, build de production local, Lighthouse 12.8.2 mobile : performance 91, accessibilité 100, bonnes pratiques 100, SEO 100 (LCP 2,9 s, CLS 0, TBT 240 ms) ; next/image sert AVIF / WebP ; à remesurer sur Vercel"
 Métadonnées de partage (Open Graph / WhatsApp aperçu),SEO,should,no,no,le lien circule surtout sur WhatsApp ; image d'aperçu 1200x630
 Balises title / description / favicon,SEO,should,yes,partial,build : title et description en place ; favicon par défaut de Next à remplacer
 Données structurées Person (schema.org),SEO,could,no,no,
-Mesure des vues et clics (réseaux / WhatsApp / appel / don) sans cookie ni IP stockée,analytics,must,no,no,click_events + sendBeacon ; robots filtrés ; purge après 13 mois
+Mesure des vues et clics (réseaux / WhatsApp / appel / don) sans cookie ni IP stockée,analytics,must,no,yes,"click_events + sendBeacon ; robots filtrés ; purge après 13 mois ; /api/evenements + sendBeacon ; robots, admin connecté, origine étrangère et envois invalides écartés (F04-H6) ; purge pg_cron à activer en production"
 Thème sombre,design,could,no,no,
 Lien « Retour en haut » ou logo cliquable vers #accueil,S00 navigation,should,yes,yes,
 Déploiement Vercel avec domaine personnalisé,deploy,should,no,no,/replica-deploy
@@ -52,18 +52,18 @@ Palette bleu / blanc / orange de sa tenue,identité,must,yes,yes,template valid�
 Concept « Le Repos » et phrases du bandeau,identité,must,yes,yes,cas B : repris avec son accord
 Liens des réseaux et numéro WhatsApp de Marcel,identité,must,yes,yes,dans content.ts ; vérifier avec lui que les liens et le numéro sont à jour ; build : à faire confirmer par Marcel
 Code de l'original,clean-room,skip,yes,skip,rien n'est lu ni copié ; tout est écrit de zéro ; captures dans replica/screens/ seulement
-Admin : connexion par lien magique ou code à 6 chiffres envoyé par e-mail (sans mot de passe),admin,must,no,partial,Supabase Auth ; inscription libre désactivée ; SMTP Resend ; backend : code à 6 chiffres + lien token_hash vérifiés en local ; SMTP Resend à brancher en production
+Admin : connexion par lien magique ou code à 6 chiffres envoyé par e-mail (sans mot de passe),admin,must,no,partial,Supabase Auth ; inscription libre désactivée ; SMTP Resend ; backend : code à 6 chiffres + lien token_hash vérifiés en local ; SMTP Resend à brancher en production ; reste : SMTP Resend en production
 Admin : liste blanche des comptes (owner = Marcel),admin,must,no,yes,admin_users ; un e-mail inconnu est refusé sans révéler la liste ; backend : admin_users + pnpm admin:add ; inconnu et non-admin vérifiés
-Admin : tableau de bord (vues et clics 7 / 30 jours + état des dons + dernières modifications),admin,must,no,partial,/admin ; backend : état des dons + compteurs ; statistiques et dernières modifications à venir
-Admin : coller ou retirer le lien de paiement et activer ou désactiver les dons,admin,must,no,no,/admin/dons ; dons activés impossible sans lien ; bouton « tester le lien »
-Admin : réseaux (ajouter / modifier / masquer / réordonner) et compteurs d'abonnés,admin,must,no,partial,"/admin/reseaux ; date de mise à jour automatique ; backend : modifier, masquer, compteurs, date auto ; ajouter et réordonner à venir"
-Admin : textes des sections et phrases du bandeau,admin,must,no,no,/admin/contenus ; jsonb validé par Zod
-Admin : photo détourée (envoi PNG / WebP ≤ 5 Mo + texte alternatif + aperçu),admin,must,no,no,/admin/photo ; bucket public-media ; dimensions lues à l'envoi
-Admin : contact (WhatsApp / téléphone / e-mail / message pré-rempli),admin,must,no,no,/admin/contact ; numéro E.164 vérifié ; bouton « tester sur WhatsApp »
-Admin : statistiques par jour / type / réseau / appareil / pays,admin,must,no,no,/admin/statistiques ; vue click_daily en heure d'Abidjan
+Admin : tableau de bord (vues et clics 7 / 30 jours + état des dons + dernières modifications),admin,must,no,yes,"/admin ; backend : état des dons + compteurs ; statistiques et dernières modifications à venir ; vues et clics 7 / 30 jours, état des dons, dernières modifications"
+Admin : coller ou retirer le lien de paiement et activer ou désactiver les dons,admin,must,no,yes,"/admin/dons ; dons activés impossible sans lien ; bouton « tester le lien » ; http refusé, ouverture sans lien refusée, bouton « tester le lien enregistré »"
+Admin : réseaux (ajouter / modifier / masquer / réordonner) et compteurs d'abonnés,admin,must,no,yes,"/admin/reseaux ; date de mise à jour automatique ; backend : modifier, masquer, compteurs, date auto ; ajouter et réordonner à venir ; ajout (un par réseau), flèches monter / descendre, masquer"
+Admin : textes des sections et phrases du bandeau,admin,must,no,yes,"/admin/contenus ; jsonb validé par Zod ; 7 blocs de textes, titres sur 1 à 4 lignes avec couleur orange choisie"
+Admin : photo détourée (envoi PNG / WebP ≤ 5 Mo + texte alternatif + aperçu),admin,must,no,yes,"/admin/photo ; bucket public-media ; dimensions lues à l'envoi ; format, dimensions et transparence lus côté serveur ; aperçu local ; ancienne photo supprimée ; retour à la photo livrée"
+Admin : contact (WhatsApp / téléphone / e-mail / message pré-rempli),admin,must,no,yes,"/admin/contact ; numéro E.164 vérifié ; bouton « tester sur WhatsApp » ; numéro accepté avec espaces, normalisé en E.164 ; bouton « tester sur WhatsApp »"
+Admin : statistiques par jour / type / réseau / appareil / pays,admin,must,no,yes,/admin/statistiques ; vue click_daily en heure d'Abidjan ; vue click_daily_detail ; périodes 7 / 30 / 90 jours ; tableau jour par jour
 Publication immédiate : la page publique se régénère à chaque enregistrement,admin,must,no,yes,revalidateTag dans une seule fonction saveAndPublish ; backend : saveAndPublish() + updateTag ; vérifié de bout en bout
 Règles d'accès RLS : lecture publique et écriture réservée aux admins,sécurité,must,no,yes,testé en local le 2026-10-31 (anon / non-admin / admin) ; backend : 19 tests pgTAP (supabase/tests/database/rls.test.sql)
-Admin utilisable sur téléphone,admin,must,no,partial,Marcel gère depuis son téléphone ; backend : écrans testés à 390 px ; barre d'onglets du bas à faire
-Admin : inviter ou retirer un gestionnaire (editor),admin,should,no,no,/admin/acces ; réservé à l'owner
+Admin utilisable sur téléphone,admin,must,no,partial,Marcel gère depuis son téléphone ; backend : écrans testés à 390 px ; barre d'onglets du bas à faire ; 8 écrans testés à 390 px sans débordement ; navigation en haut qui passe sur deux lignes (barre d'onglets du bas non faite)
+Admin : inviter ou retirer un gestionnaire (editor),admin,should,no,yes,"/admin/acces ; réservé à l'owner ; réservé au propriétaire ; retrait = compte supprimé, sessions fermées"
 Admin : brouillon et aperçu avant publication,admin,could,no,no,
 Admin : historique des modifications,admin,could,no,no,

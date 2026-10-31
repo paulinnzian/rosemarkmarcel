@@ -1,7 +1,7 @@
 # Journal de construction
 
 Une ligne par écran : ID, date, état, ce qui manque, ce qui a été plus dur que prévu.
-Pas de dépôt git dans le projet : pas de commit par écran (à créer avant /replica-deploy).
+Dépôt git créé pendant /replica-backend : commits locaux, jamais poussés (un commit par lot, pas par écran).
 
 | ID | date | état | ce qui manque | plus dur que prévu |
 | --- | --- | --- | --- | --- |
@@ -26,8 +26,24 @@ Captures : `replica/clone-screens/home-390.png`, `home-1440.png`, `404-390.png` 
 | ID | date | état | ce qui manque | plus dur que prévu |
 | --- | --- | --- | --- | --- |
 | A01 connexion | 2026-10-31 | fait (local) | SMTP Resend en production | `[auth.email] enable_signup = false` coupe toute connexion par e-mail ; le formulaire placé dans un Suspense (pour lire `?erreur=`) perdait la saisie faite avant l'hydratation ; boutons inactifs jusqu'à l'hydratation |
-| A00 tableau de bord | 2026-10-31 | partiel | statistiques, dernières modifications | `getClaims()` lit l'heure : `connection()` obligatoire avec le préchargement partiel |
-| A03 réseaux | 2026-10-31 | partiel | ajouter, réordonner | — |
+| A00 tableau de bord | 2026-10-31 | fait | — | `getClaims()` lit l'heure : `connection()` obligatoire avec le préchargement partiel |
+| A03 réseaux | 2026-10-31 | fait | — | réordonner = échange de deux positions puis renumérotation ; boutons « Monter » / « Descendre » plutôt que glisser-déposer (utilisable au clavier et au pouce) |
 | déconnexion | 2026-10-31 | fait | — | la redirection d'une Server Action déclenchait un préchargement 404 du routeur : remplacée par un POST + 303 |
 
 Captures : `replica/clone-screens/admin-dashboard-390.png`, `admin-reseaux-390.png`.
+
+## Écrans admin restants et statistiques, 2026-10-31
+
+| ID | date | état | ce qui manque | plus dur que prévu |
+| --- | --- | --- | --- | --- |
+| A02 dons | 2026-10-31 | fait | — | React 19 vide un `<form action>` après chaque action, même en erreur : l'admin perdait sa saisie (BUG-003). Envoi par `useAdminForm` (onSubmit + transition), repris par les 8 formulaires |
+| A04 textes | 2026-10-31 | fait | — | un seul écran pour 7 groupes de textes ; les titres à lignes colorées ont un champ « Couleur orange » validé contre le nombre de lignes |
+| A05 photo | 2026-10-31 | fait | recadrage dans le navigateur (could) | format et dimensions lus dans les octets (`imageInfo`), pas dans le nom ; `remove()` de Supabase Storage ne supprimait rien faute de politique SELECT, sans erreur (BUG-002) |
+| A06 contact | 2026-10-31 | partiel | ajouter un canal (seuls les canaux existants se modifient) | numéro normalisé (espaces, points, tirets retirés) avant validation |
+| A07 statistiques | 2026-10-31 | fait | — | graphique en barres en CSS avec tableau de repli ; vue `click_daily_detail` pour appareils et pays |
+| A08 accès | 2026-10-31 | fait | — | le message « retiré » disparaissait : `revalidatePath` remontait le formulaire ; l'état enregistré est maintenant affiché par le formulaire lui-même |
+| /api/evenements | 2026-10-31 | fait | purge pg_cron à activer en production | la limite de débit est en mémoire, donc par instance ; les tests Playwright héritaient de la session admin (`storageState`) et leurs événements étaient ignorés |
+| barre d'onglets mobile | — | non fait | spec AdminShell : barre en bas sur mobile | aujourd'hui 8 liens en haut, qui passent à la ligne à 390 px |
+
+Captures : `replica/clone-screens/admin-{dashboard,dons,reseaux,contenus,photo,contact,statistiques,acces}-390.png` (build de production, 0 erreur console).
+Tests : `replica/test-plan.md` ; bugs : `replica/bugs.md`.
