@@ -31,7 +31,7 @@ export function ContactSection({ contact, contacts }: ContactSectionProps) {
               data-track="whatsapp"
               target="_blank"
               rel="noopener noreferrer"
-              className={buttonClasses("primary")}
+              className={buttonClasses("primary", "w-full lg:w-auto")}
             >
               <Decorated text={whatsapp.label} />
               <span className="sr-only"> (nouvel onglet)</span>

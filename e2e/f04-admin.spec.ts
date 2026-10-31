@@ -58,6 +58,42 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     }
   });
 
+  test("F04-E5 navigation : onglets en bas sur téléphone, menu « Plus », barre latérale sur ordinateur", async ({ page }) => {
+    await page.goto("/admin");
+    const tabs = page.getByRole("navigation", { name: "Administration" });
+    await expect(tabs).toHaveCount(1);
+    const tabBox = await tabs.boundingBox();
+    expect(tabBox && tabBox.y + tabBox.height).toBeGreaterThan(800); // collée en bas de l'écran (844 px)
+    await expect(tabs.getByRole("link", { name: "Accueil" })).toHaveAttribute("aria-current", "page");
+
+    await tabs.getByRole("link", { name: "Dons" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Dons");
+    await expect(tabs.getByRole("link", { name: "Dons" })).toHaveAttribute("aria-current", "page");
+
+    await tabs.getByRole("button", { name: /^Plus/ }).click();
+    const more = page.getByRole("list", { name: "Autres écrans" });
+    await expect(more).toBeVisible();
+    await expectAccessible(page);
+    await more.getByRole("link", { name: "Statistiques" }).click();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Statistiques");
+    await expect(more).toBeHidden();
+    await expect(tabs.getByRole("button", { name: /^Plus/ })).toHaveAccessibleName(/Statistiques/);
+
+    // Le dernier contenu de la page n'est pas caché sous la barre.
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const contentBottom = await page.locator("main").evaluate((main) => main.getBoundingClientRect().bottom - parseFloat(getComputedStyle(main).paddingBottom));
+    const barBox = await tabs.boundingBox();
+    expect(contentBottom).toBeLessThanOrEqual(barBox!.y);
+
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const sidebar = page.getByRole("navigation", { name: "Administration" });
+    await expect(sidebar).toHaveCount(1);
+    await expect(sidebar.getByRole("link")).toHaveCount(8);
+    const sideBox = await sidebar.boundingBox();
+    expect(sideBox && sideBox.x).toBeLessThan(260);
+    await expectAccessible(page);
+  });
+
   test("F04-H1 dons : lien refusé en http, ouverture sans lien refusée, puis le bouton épinglé ouvre le lien", async ({ page }) => {
     await page.goto("/admin/dons");
     const link = page.getByLabel("Lien de paiement");

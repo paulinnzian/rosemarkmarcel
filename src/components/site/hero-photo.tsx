@@ -12,7 +12,7 @@ type HeroPhotoProps = {
 export function HeroPhoto({ photo, label, fallbackText }: HeroPhotoProps) {
   return (
     <figure className="relative mx-auto w-full max-w-[604px]">
-      <div className="radius-photo overflow-hidden bg-tint">
+      <div className="radius-photo aspect-hero-photo relative overflow-hidden bg-tint">
         <HeroImage photo={photo} fallbackText={fallbackText} />
       </div>
       <figcaption className="absolute bottom-6 left-3 -rotate-5 bg-canvas px-[22px] py-[15px] text-ink shadow-label lg:-left-6">

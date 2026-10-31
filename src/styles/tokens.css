@@ -34,6 +34,7 @@
   --gutter: clamp(19.5px, 5vw, 72px);
   --section-y: clamp(48px, 6vw, 88px);
   --floating-reserve: 88px;
+  --admin-tabbar: 64px;
 
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur-fast: 120ms;
@@ -131,6 +132,30 @@
   @media (width >= 64rem) {
     border-radius: 140px 12px 12px 12px;
   }
+}
+
+/* Cadre de la photo du héros : portrait recadré par le haut, quelle que soit la photo envoyée */
+@utility aspect-hero-photo {
+  aspect-ratio: 3 / 4;
+  @media (width >= 64rem) {
+    aspect-ratio: 4 / 5;
+  }
+}
+
+/* Barre d'onglets de l'admin sur téléphone : hauteur fixe + zone de la barre d'accueil de l'iPhone */
+@utility admin-tabbar {
+  height: calc(var(--admin-tabbar) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Contenu de l'admin : jamais caché sous la barre d'onglets */
+@utility pb-admin-tabbar {
+  padding-bottom: calc(var(--admin-tabbar) + env(safe-area-inset-bottom) + 2rem);
+}
+
+/* Menu « Plus » ouvert juste au-dessus de la barre d'onglets */
+@utility above-admin-tabbar {
+  bottom: calc(var(--admin-tabbar) + env(safe-area-inset-bottom) + 0.5rem);
 }
 
 /* Espace réservé sous le contenu pour le bouton de soutien épinglé (layout du site public) */

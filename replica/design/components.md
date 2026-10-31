@@ -115,7 +115,8 @@ StickerLabel                       (étiquette inclinée)
 ```text
 Band                               (bandeau ✦)
   layout    pleine largeur, fond accent, padding 22px, phrases centrées séparées par ✦ highlight,
-            qui passent à la ligne en mobile (comme l'original : statique)
+            qui passent à la ligne en mobile (écart assumé : l'original tient sur une ligne coupée au bord ;
+            ici toutes les phrases restent lisibles sans défilement, vu par /replica-diff le 2026-10-31)
   tokens    text on-accent, sm/700 uppercase, tracking 1px
   motion    aucune : un défilement continu imposerait un bouton pause (WCAG 2.2.2) et du JS pour un élément décoratif
   a11y      <p> simple ; les ✦ sont aria-hidden
@@ -195,8 +196,9 @@ Même tokens. Fond canvas, cartes surface. Icônes Lucide 20px. Pensé pour le t
 
 ```text
 AdminShell
-  layout    mobile : barre du haut (logo, menu) + barre d'onglets en bas (Accueil, Dons, Réseaux, Contenus, Plus) ;
-            desktop : barre latérale 240px
+  layout    mobile : barre du haut (titre, voir le site, déconnexion) + barre d'onglets en bas (Accueil, Dons, Réseaux, Textes, Plus) ;
+            « Plus » ouvre un popover natif (Photo, Contact, Statistiques, Accès) ; desktop : barre latérale 240px
+            onglets en texte seul (pas d'icônes Lucide : aucune dépendance ajoutée)
   a11y      <nav aria-label="Administration"> ; page courante aria-current="page"
   used on   A02–A08
 ```
