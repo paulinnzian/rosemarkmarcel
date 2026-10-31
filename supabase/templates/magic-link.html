@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr">
+  <body style="margin:0;padding:24px;background:#f9f8f2;font-family:Arial,sans-serif;color:#171744">
+    <div style="max-width:440px;margin:0 auto;background:#ffffff;border-radius:14px;padding:28px">
+      <p style="margin:0 0 8px;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase">Administration du site</p>
+      <h1 style="margin:0 0 16px;font-size:24px">Votre code de connexion</h1>
+      <p style="margin:0 0 20px;font-size:16px;line-height:28px;color:#5c5c70">
+        Tapez ce code sur la page de connexion, ou touchez le bouton depuis ce téléphone.
+      </p>
+      <p style="margin:0 0 24px;font-size:32px;font-weight:700;letter-spacing:0.2em">{{ .Token }}</p>
+      <p style="margin:0 0 24px">
+        <a href="{{ .SiteURL }}/admin/auth/callback?token_hash={{ .TokenHash }}&amp;type=email"
+           style="display:inline-block;background:#ff9718;color:#171744;font-weight:700;font-size:14px;text-decoration:none;padding:17px 24px;border-radius:6px">
+          Ouvrir l’administration
+        </a>
+      </p>
+      <p style="margin:0;font-size:12px;line-height:18px;color:#5c5c70">
+        Le code et le lien expirent dans 15 minutes. Si vous n’avez rien demandé, ignorez cet e-mail.
+      </p>
+    </div>
+  </body>
+</html>

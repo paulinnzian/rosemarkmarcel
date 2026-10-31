@@ -4,7 +4,7 @@ import { z } from "zod";
 // les formulaires de l'admin et les lignes lues dans Supabase.
 
 const text = z.string().trim().min(1);
-const httpsUrl = z.url({ protocol: /^https$/, error: "Le lien doit commencer par https://" });
+export const httpsUrl = z.url({ protocol: /^https$/, error: "Le lien doit commencer par https://" });
 const anchor = z.string().regex(/^#[a-z-]+$/);
 const e164 = z.string().regex(/^\+[1-9][0-9]{7,14}$/, "Numéro au format international : +225…");
 

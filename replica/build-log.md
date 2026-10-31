@@ -20,3 +20,14 @@ Vérifié le 2026-10-31 (Playwright, serveur de dev) : 390 et 1440 px sans débo
 Non vérifié en capture (logique seulement) : réseau masqué, contact sans WhatsApp, dons activés sur l'accueil (vu sur /design), photo qui ne charge pas.
 
 Captures : `replica/clone-screens/home-390.png`, `home-1440.png`, `404-390.png` (une seule page : les sections ne sont pas des écrans séparés).
+
+## Tranche verticale (backend), 2026-10-31
+
+| ID | date | état | ce qui manque | plus dur que prévu |
+| --- | --- | --- | --- | --- |
+| A01 connexion | 2026-10-31 | fait (local) | SMTP Resend en production | `[auth.email] enable_signup = false` coupe toute connexion par e-mail ; le formulaire placé dans un Suspense (pour lire `?erreur=`) perdait la saisie faite avant l'hydratation ; boutons inactifs jusqu'à l'hydratation |
+| A00 tableau de bord | 2026-10-31 | partiel | statistiques, dernières modifications | `getClaims()` lit l'heure : `connection()` obligatoire avec le préchargement partiel |
+| A03 réseaux | 2026-10-31 | partiel | ajouter, réordonner | — |
+| déconnexion | 2026-10-31 | fait | — | la redirection d'une Server Action déclenchait un préchargement 404 du routeur : remplacée par un POST + 303 |
+
+Captures : `replica/clone-screens/admin-dashboard-390.png`, `admin-reseaux-390.png`.
