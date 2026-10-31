@@ -67,3 +67,10 @@ Admin utilisable sur téléphone,admin,must,no,partial,Marcel gère depuis son t
 Admin : inviter ou retirer un gestionnaire (editor),admin,should,no,yes,"/admin/acces ; réservé à l'owner ; réservé au propriétaire ; retrait = compte supprimé, sessions fermées"
 Admin : brouillon et aperçu avant publication,admin,could,no,no,
 Admin : historique des modifications,admin,could,no,no,
+"Vérification des liens (paiement, réseaux, WhatsApp) avec alerte « lien cassé » au tableau de bord",améliorations,should,no,no,"fixes.md #1 ; M ; /replica-backend ; proxy : thème « liens qui ne marchent pas pour les visiteurs » (6 avis, 2 sources) ; réseaux qui bloquent les robots marqués « non vérifiable »"
+"Connexion : aide quand le code n'arrive pas (spams, délai, renvoi après 60 s)",améliorations,should,no,no,"fixes.md #2 ; S ; /replica-backend ; proxy : thème connexion (36 avis, 2 sources) ; le renvoi existe déjà, l'aide non"
+"Statistiques : date de début du comptage, dernière visite enregistrée, ce qui n'est pas compté",améliorations,should,no,no,"fixes.md #3 ; S ; /replica-build ; proxy : thème statistiques (12 avis, 2 sources)"
+"Page confidentialité courte : pas de cookie visiteur, pas de pub, pas d'IA, sous-traitants nommés",améliorations,should,no,no,"fixes.md #4 ; S ; /replica-build + relecture juridique ; due avant la mise en ligne (checklist backend.md) ; proxy : thèmes bannissement + conditions/IA (17 avis, 2 sources)"
+Sauvegarde téléchargeable des contenus et de la photo depuis l'admin,améliorations,could,no,no,"fixes.md #5 ; S ; /replica-backend ; proxy : thème enfermement (5 avis, 2 sources)"
+"Phrase « le site ne prend rien sur votre don » dans la section Soutenir (modifiable, à valider par Marcel)",améliorations,could,no,no,"fixes.md #6 ; S ; /replica-build ; proxy : thème commissions (13 avis, 2 sources)"
+Passage VoiceOver à la main sur l'admin (iPhone),améliorations,could,no,no,"fixes.md #7 ; S ; /replica-test ; proxy mince : 5 avis, une source"
