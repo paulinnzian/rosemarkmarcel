@@ -1,9 +1,10 @@
 "use client";
 
-import { useActionState, useSyncExternalStore } from "react";
+import { useActionState } from "react";
 
 import { Field } from "@/components/admin/field";
 import { buttonClasses } from "@/components/site/button-styles";
+import { useHydrated } from "@/lib/use-hydrated";
 
 import { signIn, type LoginState } from "./actions";
 
@@ -67,11 +68,4 @@ export function LoginForm() {
       )}
     </form>
   );
-}
-
-const noSubscription = () => () => {};
-
-/** false au rendu serveur et avant l'hydratation, true ensuite. */
-function useHydrated(): boolean {
-  return useSyncExternalStore(noSubscription, () => true, () => false);
 }

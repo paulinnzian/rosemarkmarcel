@@ -19,7 +19,7 @@ export function HeroSection({ content }: { content: SiteContent }) {
           </div>
           <p className="mt-6 max-w-[34rem] text-lead text-muted">{hero.intro}</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2">
-            <CtaLink cta={hero.primaryCta} variant="primary" />
+            <CtaLink cta={hero.primaryCta} variant="primary" track="hero" />
             <SupportButton donation={donation} variant="hero" />
           </div>
         </div>

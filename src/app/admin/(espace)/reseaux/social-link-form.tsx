@@ -1,11 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
-
 import { Field } from "@/components/admin/field";
+import { SubmitRow } from "@/components/admin/submit-row";
 import { Switch } from "@/components/admin/switch";
-import { buttonClasses } from "@/components/site/button-styles";
-import { idleForm, type FormState } from "@/lib/admin/form-state";
+import { useAdminForm } from "@/lib/admin/use-admin-form";
 
 import { updateSocialLink } from "./actions";
 
@@ -22,21 +20,23 @@ export type EditableSocialLink = {
   visible: boolean;
 };
 
-export function SocialLinkForm({ link }: { link: EditableSocialLink }) {
-  const [state, action, pending] = useActionState<FormState, FormData>(updateSocialLink, idleForm);
+/** `orderControls` : boutons de déplacement (formulaires à part, rendus par la page). */
+export function SocialLinkForm({ link, orderControls }: { link: EditableSocialLink; orderControls?: React.ReactNode }) {
+  const { state, pending, onSubmit } = useAdminForm(updateSocialLink);
   const id = (field: string) => `${link.network}-${field}`;
   const error = (field: string) => state.fieldErrors[field];
 
   return (
     <section aria-labelledby={id("titre")} className="rounded-lg bg-surface p-6">
-      <div className="flex flex-wrap items-baseline justify-between gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 id={id("titre")} className="text-label">
           {link.name}
         </h2>
-        <p className="text-xs text-muted">{link.updatedLabel ? `Compteur mis à jour le ${link.updatedLabel}` : "Compteur jamais mis à jour ici"}</p>
+        {orderControls}
       </div>
+      <p className="mt-1 text-xs text-muted">{link.updatedLabel ? `Compteur mis à jour le ${link.updatedLabel}` : "Compteur jamais mis à jour ici"}</p>
 
-      <form action={action} className="mt-5 grid gap-5" noValidate>
+      <form onSubmit={onSubmit} className="mt-5 grid gap-5" noValidate>
         <input type="hidden" name="id" value={link.id} />
         <Field
           id={id("followers")}
@@ -70,14 +70,7 @@ export function SocialLinkForm({ link }: { link: EditableSocialLink }) {
         />
         <Switch name="visible" label="Afficher sur le site" defaultChecked={link.visible} />
 
-        <div className="flex flex-wrap items-center gap-4">
-          <button type="submit" disabled={pending} className={buttonClasses("accent")}>
-            {pending ? "Enregistrement…" : "Enregistrer"}
-          </button>
-          <p role={state.status === "error" ? "alert" : "status"} className={`text-sm ${state.status === "error" ? "font-bold text-danger" : "text-success"}`}>
-            {state.message}
-          </p>
-        </div>
+        <SubmitRow state={state} pending={pending} />
       </form>
     </section>
   );

@@ -22,7 +22,7 @@ export function AboutSection({ about }: { about: SiteContent["about"] }) {
             ))}
           </div>
           <div className="mt-4">
-            <CtaLink cta={about.cta} variant="text" />
+            <CtaLink cta={about.cta} variant="text" track="a-propos" />
           </div>
         </div>
       </div>

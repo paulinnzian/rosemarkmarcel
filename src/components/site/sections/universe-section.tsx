@@ -21,7 +21,7 @@ export function UniverseSection({ universe }: { universe: SiteContent["universe"
             ))}
           </div>
           <div className="mt-4">
-            <CtaLink cta={universe.cta} variant="text" />
+            <CtaLink cta={universe.cta} variant="text" track="univers" />
           </div>
         </div>
       </div>

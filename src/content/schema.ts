@@ -3,16 +3,23 @@ import { z } from "zod";
 // Contrat du contenu du site : le même schéma valide les valeurs initiales (content.ts),
 // les formulaires de l'admin et les lignes lues dans Supabase.
 
-const text = z.string().trim().min(1);
+// Messages écrits pour l'admin : ils s'affichent sous les champs des formulaires.
+const text = z.string().trim().min(1, "Ce champ ne peut pas être vide.");
 export const httpsUrl = z.url({ protocol: /^https$/, error: "Le lien doit commencer par https://" });
+const paragraphs = z.array(text).min(1, "Écrivez au moins un paragraphe.");
 const anchor = z.string().regex(/^#[a-z-]+$/);
 const e164 = z.string().regex(/^\+[1-9][0-9]{7,14}$/, "Numéro au format international : +225…");
 
-export const headingSchema = z.object({
-  lines: z.array(text).min(1).max(4),
-  // Index de la première ligne en couleur d'accent ; null = titre d'une seule couleur.
-  highlightFrom: z.number().int().min(1).nullable(),
-});
+export const headingSchema = z
+  .object({
+    lines: z.array(text).min(1, "Écrivez au moins une ligne.").max(4, "Quatre lignes au plus."),
+    // Index de la première ligne en couleur d'accent ; null = titre d'une seule couleur.
+    highlightFrom: z.number().int().min(1).nullable(),
+  })
+  .refine((heading) => heading.highlightFrom === null || heading.highlightFrom < heading.lines.length, {
+    message: "Le titre n’a pas assez de lignes pour cette couleur.",
+    path: ["highlightFrom"],
+  });
 
 const ctaSchema = z.object({ label: text, href: z.union([anchor, httpsUrl]) });
 
@@ -32,7 +39,7 @@ export const socialLinkSchema = z
     visible: z.boolean(),
   })
   .refine((link) => link.followers !== null || link.fallbackLabel !== undefined, {
-    message: "Un réseau sans compteur a besoin d'un texte de remplacement.",
+    message: "Un réseau sans compteur a besoin d’un texte de remplacement.",
     path: ["fallbackLabel"],
   });
 
@@ -52,7 +59,7 @@ export const donationSchema = z
     disabledModal: z.object({ kicker: text, title: text, text, close: text }),
   })
   .refine((donation) => !donation.enabled || donation.paymentUrl !== null, {
-    message: "Collez un lien de paiement avant d'activer les dons.",
+    message: "Collez un lien de paiement avant d’activer les dons.",
     path: ["paymentUrl"],
   });
 
@@ -66,9 +73,9 @@ export const siteContentSchema = z.object({
   photo: z.object({ src: text, alt: text, width: z.number().int().positive(), height: z.number().int().positive() }),
   photoLabel: z.object({ kicker: text, text }),
   marquee: z.array(text),
-  about: z.object({ kicker: text, heading: headingSchema, subtitle: text, paragraphs: z.array(text).min(1), cta: ctaSchema }),
+  about: z.object({ kicker: text, heading: headingSchema, subtitle: text, paragraphs: paragraphs, cta: ctaSchema }),
   community: z.object({ kicker: text, heading: headingSchema, intro: text, countersSourceLabel: text }),
-  universe: z.object({ kicker: text, heading: headingSchema, cardText: z.tuple([text, text]), paragraphs: z.array(text).min(1), cta: ctaSchema }),
+  universe: z.object({ kicker: text, heading: headingSchema, cardText: z.tuple([text, text]), paragraphs: paragraphs, cta: ctaSchema }),
   contact: z.object({ kicker: text, heading: headingSchema, intro: text, note: text }),
   footerLine: text,
   socials: z.array(socialLinkSchema),

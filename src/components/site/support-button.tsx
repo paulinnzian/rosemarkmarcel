@@ -19,12 +19,12 @@ export function SupportButton({ donation, variant }: { donation: Donation; varia
 
   if (donation.enabled && donation.paymentUrl) {
     return (
-      <a href={donation.paymentUrl} target="_blank" rel="noopener noreferrer" className={className}>
+      <a href={donation.paymentUrl} target="_blank" rel="noopener noreferrer" className={className} data-track="donation" data-track-target={variant}>
         <Decorated text={label} />
         <span className="sr-only"> (nouvel onglet)</span>
       </a>
     );
   }
 
-  return <SupportDialog label={label} triggerClassName={className} modal={donation.disabledModal} />;
+  return <SupportDialog label={label} triggerClassName={className} trackTarget={`${variant}-ferme`} modal={donation.disabledModal} />;
 }

@@ -28,6 +28,7 @@ export function ContactSection({ contact, contacts }: ContactSectionProps) {
           {whatsapp?.type === "whatsapp" && (
             <a
               href={whatsappHref(whatsapp.value, whatsapp.prefilledMessage)}
+              data-track="whatsapp"
               target="_blank"
               rel="noopener noreferrer"
               className={buttonClasses("primary")}
@@ -37,12 +38,12 @@ export function ContactSection({ contact, contacts }: ContactSectionProps) {
             </a>
           )}
           {phone && (
-            <a href={`tel:${phone.value}`} aria-label={`${phone.label}, ${phone.display}`} className="inline-flex min-h-11 items-center text-tel text-ink">
+            <a href={`tel:${phone.value}`} data-track="phone" aria-label={`${phone.label}, ${phone.display}`} className="inline-flex min-h-11 items-center text-tel text-ink">
               {phone.display}
             </a>
           )}
           {email && (
-            <a href={`mailto:${email.value}`} className={buttonClasses("text")}>
+            <a href={`mailto:${email.value}`} data-track="cta" data-track-target="email" className={buttonClasses("text")}>
               {email.display}
             </a>
           )}

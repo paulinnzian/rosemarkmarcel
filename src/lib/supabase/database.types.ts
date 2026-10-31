@@ -100,6 +100,14 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"click_daily_detail": {
+                  Row: {
+                    "country": string | null,"day": string | null,"device": string | null,"kind": string,"target": string | null,"total": number | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
+                  ]
                 }
           }
           Functions: {

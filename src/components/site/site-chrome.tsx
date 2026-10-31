@@ -1,3 +1,4 @@
+import { ClickTracker } from "@/components/site/click-tracker";
 import { FloatingSupport } from "@/components/site/floating-support";
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
@@ -5,7 +6,7 @@ import { getSiteContent } from "@/lib/site-data";
 
 /**
  * Habillage de toutes les pages publiques (layout du site et page 404) : lien d'évitement, en-tête, pied de page,
- * bouton de soutien épinglé, et l'espace réservé sous le contenu pour ce bouton.
+ * bouton de soutien épinglé, l'espace réservé sous le contenu pour ce bouton, et le compteur de visites et de clics.
  */
 export async function SiteChrome({ children }: { children: React.ReactNode }) {
   const { creatorName, tagline, nav, footerLine, donation } = await getSiteContent();
@@ -24,6 +25,7 @@ export async function SiteChrome({ children }: { children: React.ReactNode }) {
         <SiteFooter creatorName={creatorName} footerLine={footerLine} />
       </div>
       <FloatingSupport donation={donation} />
+      <ClickTracker />
     </>
   );
 }
