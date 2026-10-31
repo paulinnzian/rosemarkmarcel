@@ -13,6 +13,8 @@ export type LoginState = {
   email: string;
   message: string | null;
   error: boolean;
+  /** Heure du dernier envoi : sert de clé au compte à rebours du bouton « Renvoyer le code ». */
+  sentAt?: number;
 };
 
 const emailSchema = z.email({ error: "Entrez une adresse e-mail valide." });
@@ -34,18 +36,22 @@ export async function signIn(previous: LoginState, formData: FormData): Promise<
 
   const supabase = await createSessionClient();
 
-  if (intent === "send") {
+  if (intent === "send" || intent === "resend") {
+    const resend = intent === "resend";
     // shouldCreateUser: false — une adresse hors liste blanche ne crée pas de compte et ne reçoit rien.
     const { error } = await supabase.auth.signInWithOtp({ email: email.data, options: { shouldCreateUser: false } });
     if (error?.status === 429) {
-      return { step: "email", email: email.data, message: "Trop de demandes. Réessayez dans une minute.", error: true };
+      return { ...previous, step: resend ? "code" : "email", email: email.data, message: "Trop de demandes. Réessayez dans une minute.", error: true };
     }
     // Même réponse que l'adresse soit admin ou non : la liste blanche ne se devine pas.
     return {
       step: "code",
       email: email.data,
-      message: "Si cette adresse a accès à l’administration, un e-mail avec un code vient de partir.",
+      message: resend
+        ? "Si cette adresse a accès à l’administration, un nouveau code vient de partir : utilisez le plus récent."
+        : "Si cette adresse a accès à l’administration, un e-mail avec un code vient de partir.",
       error: false,
+      sentAt: Date.now(),
     };
   }
 

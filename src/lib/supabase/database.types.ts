@@ -61,6 +61,20 @@ export type Database = {
                   Relationships: [
                     
                   ]
+                },"link_checks": {
+                  Row: {
+                    "checked_at": string,"http_status": number | null,"label": string,"status": string,"url": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "checked_at"?: string,"http_status"?: number | null,"label": string,"status": string,"url": string
+                  }
+                  Update: {
+                    "checked_at"?: string,"http_status"?: number | null,"label"?: string,"status"?: string,"url"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"site_content": {
                   Row: {
                     "concept_name": string,"creator_name": string,"id": number,"photo_alt": string,"photo_height": number | null,"photo_path": string | null,"photo_width": number | null,"role_line": string,"sections": NonNullable<Json>,"tagline": string,"updated_at": string,"updated_by": string | null

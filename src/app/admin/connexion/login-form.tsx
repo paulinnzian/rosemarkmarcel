@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 
 import { Field } from "@/components/admin/field";
 import { buttonClasses } from "@/components/site/button-styles";
@@ -9,6 +9,28 @@ import { useHydrated } from "@/lib/use-hydrated";
 import { signIn, type LoginState } from "./actions";
 
 const initialState: LoginState = { step: "email", email: "", message: null, error: false };
+const RESEND_DELAY = 60;
+
+/** Inactif une minute après chaque envoi (clé = heure de l'envoi), le temps que l'e-mail arrive. */
+function ResendButton({ disabled }: { disabled: boolean }) {
+  const [left, setLeft] = useState(RESEND_DELAY);
+
+  useEffect(() => {
+    const end = Date.now() + RESEND_DELAY * 1000;
+    const timer = setInterval(() => {
+      const seconds = Math.max(0, Math.ceil((end - Date.now()) / 1000));
+      setLeft(seconds);
+      if (seconds === 0) clearInterval(timer);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <button type="submit" name="intent" value="resend" formNoValidate disabled={disabled || left > 0} className={buttonClasses("accent", "w-full")}>
+      {left > 0 ? `Renvoyer le code (possible dans ${left} s)` : "Renvoyer le code"}
+    </button>
+  );
+}
 
 // Rendu dans la coquille statique de la page (sans Suspense autour) : ce qui est tapé avant l'hydratation est conservé.
 export function LoginForm() {
@@ -61,8 +83,15 @@ export function LoginForm() {
           <button type="submit" name="intent" value="verify" disabled={busy} className={buttonClasses("primary", "w-full")}>
             {pending ? "Vérification…" : "Se connecter"}
           </button>
+          <div className="grid gap-3 rounded-md bg-tint p-4">
+            <p className="text-sm text-ink">
+              Rien reçu ? L’e-mail peut mettre une minute à arriver. Regardez aussi dans les indésirables (spams) ou l’onglet
+              « Promotions ».
+            </p>
+            <ResendButton key={state.sentAt ?? 0} disabled={busy} />
+          </div>
           <button type="submit" name="intent" value="restart" formNoValidate disabled={busy} className={buttonClasses("text")}>
-            Changer d’adresse ou renvoyer un code
+            Changer d’adresse
           </button>
         </>
       )}

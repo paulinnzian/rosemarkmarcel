@@ -21,6 +21,7 @@ export async function updateDonation(_previous: FormState, formData: FormData): 
       cardTitle: [textOf(formData, "texts.cardTitle.0"), textOf(formData, "texts.cardTitle.1")],
       cardText: textOf(formData, "texts.cardText"),
       thanks: textOf(formData, "texts.thanks"),
+      feeNote: optionalTextOf(formData, "texts.feeNote") ?? undefined,
     },
     disabledModal: {
       kicker: textOf(formData, "disabledModal.kicker"),

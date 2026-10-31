@@ -12,6 +12,8 @@ export const metadata: Metadata = { title: "Statistiques" };
 const PERIODS = [7, 30, 90] as const;
 const number = new Intl.NumberFormat("fr-FR");
 const regions = new Intl.DisplayNames("fr-FR", { type: "region" });
+const dayFormat = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Africa/Abidjan" });
+const momentFormat = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeStyle: "short", timeZone: "Africa/Abidjan" });
 const DEVICES: Record<string, string> = { mobile: "Téléphone", tablet: "Tablette", desktop: "Ordinateur", inconnu: "Inconnu" };
 const DONATION_BUTTONS: Record<string, string> = {
   hero: "Accueil (dons ouverts)",
@@ -37,7 +39,12 @@ export default async function StatistiquesPage({ searchParams }: PageProps<"/adm
   const period = PERIODS.find((value) => value === requested) ?? 30;
   const days = lastDays(period, new Date());
 
-  const { data, error } = await supabase.from("click_daily_detail").select("day, kind, target, device, country, total").gte("day", days[0]);
+  // Bornes du comptage : sans elles, « 0 » ne dit pas si personne n'est venu ou si rien n'est encore enregistré.
+  const [{ data, error }, { data: first }, { data: last }] = await Promise.all([
+    supabase.from("click_daily_detail").select("day, kind, target, device, country, total").gte("day", days[0]),
+    supabase.from("click_events").select("occurred_at").order("occurred_at", { ascending: true }).limit(1).maybeSingle(),
+    supabase.from("click_events").select("occurred_at").order("occurred_at", { ascending: false }).limit(1).maybeSingle(),
+  ]);
   const stats = summarize((data ?? []) as StatRow[], days);
   const { totals } = stats;
 
@@ -53,8 +60,21 @@ export default async function StatistiquesPage({ searchParams }: PageProps<"/adm
     <>
       <h1 className="text-[32px] font-bold leading-tight tracking-[-0.03em]">Statistiques</h1>
       <p className="mt-2 max-w-prose text-sm text-muted">
-        Sans cookie ni adresse IP : on compte les visites et les clics, pas les personnes. Vos propres visites, connecté, ne sont pas comptées.
+        Sans cookie ni adresse IP : on compte les visites et les clics, pas les personnes. Ne sont pas comptés : les robots (moteurs de
+        recherche, aperçus de liens), vos visites faites en étant connecté à l’admin, et les envois venus d’autres sites.
       </p>
+      {!error && (
+        <p className="mt-2 max-w-prose text-sm text-ink">
+          {first && last ? (
+            <>
+              Comptage depuis le {dayFormat.format(new Date(first.occurred_at))}. Dernière activité enregistrée le{" "}
+              {momentFormat.format(new Date(last.occurred_at))}.
+            </>
+          ) : (
+            "Pas encore de données : le comptage commence à la première visite du site en ligne."
+          )}
+        </p>
+      )}
 
       <nav aria-label="Période" className="mt-6">
         <ul className="flex flex-wrap gap-2">

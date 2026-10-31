@@ -4,9 +4,11 @@ import { requireAdmin } from "@/lib/admin/session";
 import { whatsappHref } from "@/lib/format";
 
 import { ChannelForm, type EditableChannel } from "./channel-form";
+import { NewChannelForm } from "./new-channel-form";
 
 export const metadata: Metadata = { title: "Contact" };
 
+const TYPES: EditableChannel["type"][] = ["whatsapp", "phone", "email"];
 const isChannelType = (type: string): type is EditableChannel["type"] => type === "whatsapp" || type === "phone" || type === "email";
 
 export default async function ContactPage() {
@@ -25,10 +27,9 @@ export default async function ContactPage() {
         <p role="alert" className="mt-8 text-sm font-bold text-danger">
           Impossible de lire les contacts pour le moment. Rechargez la page.
         </p>
-      ) : channels.length === 0 ? (
-        <p className="mt-8 text-sm text-muted">Aucun contact pour le moment.</p>
       ) : (
         <div className="mt-8 grid gap-6">
+          {channels.length === 0 && <p className="text-sm text-muted">Aucun contact pour le moment.</p>}
           {channels.flatMap((channel) =>
             isChannelType(channel.type)
               ? [
@@ -47,6 +48,9 @@ export default async function ContactPage() {
                   />,
                 ]
               : [],
+          )}
+          {TYPES.some((type) => !channels.some((channel) => channel.type === type)) && (
+            <NewChannelForm available={TYPES.filter((type) => !channels.some((channel) => channel.type === type))} />
           )}
         </div>
       )}

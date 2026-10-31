@@ -46,7 +46,7 @@ export const socialLinkSchema = z
 export const contactChannelSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("whatsapp"), value: e164, display: text, label: text, prefilledMessage: z.string().max(500).optional() }),
   z.object({ type: z.literal("phone"), value: e164, display: text, label: text }),
-  z.object({ type: z.literal("email"), value: z.email(), display: text, label: text }),
+  z.object({ type: z.literal("email"), value: z.email({ error: "Adresse e-mail invalide." }), display: text, label: text }),
 ]);
 
 export const donationSchema = z
@@ -55,7 +55,7 @@ export const donationSchema = z
     paymentUrl: httpsUrl.nullable(),
     buttonLabel: text,
     floatingLabel: text,
-    texts: z.object({ kicker: text, heading: headingSchema, text, cardTitle: z.tuple([text, text]), cardText: text, thanks: text }),
+    texts: z.object({ kicker: text, heading: headingSchema, text, cardTitle: z.tuple([text, text]), cardText: text, thanks: text, feeNote: text.optional() }),
     disabledModal: z.object({ kicker: text, title: text, text, close: text }),
   })
   .refine((donation) => !donation.enabled || donation.paymentUrl !== null, {

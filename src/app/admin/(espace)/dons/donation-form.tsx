@@ -61,6 +61,7 @@ export function DonationForm({ donation }: { donation: Donation }) {
         <Field id="dons-cardTitle-1" name="texts.cardTitle.1" label="Titre de la carte, 2e ligne" defaultValue={texts.cardTitle[1]} error={errors["texts.cardTitle.1"]} />
         <Field id="dons-cardText" name="texts.cardText" label="Texte de la carte" defaultValue={texts.cardText} error={errors["texts.cardText"]} />
         <Field id="dons-thanks" name="texts.thanks" label="Remerciement sous le bouton" defaultValue={texts.thanks} error={errors["texts.thanks"]} />
+        <Field id="dons-feeNote" name="texts.feeNote" label="Phrase sur les frais (facultatif)" hint="Laissez vide pour ne rien afficher." defaultValue={texts.feeNote ?? ""} error={errors["texts.feeNote"]} />
       </section>
 
       <section aria-labelledby="dons-bientot" className="grid gap-5 rounded-lg bg-surface p-6">

@@ -1,6 +1,6 @@
 import { devices, type Page } from "@playwright/test";
 
-import { EDITOR, NOT_ADMIN, OWNER_STATE, serviceClient } from "./support/env";
+import { EDITOR, NOT_ADMIN, OWNER, OWNER_STATE, serviceClient } from "./support/env";
 import { codeIn, mailCount, nextMail, requestCode, signIn } from "./support/login";
 import { solidPng } from "./support/png";
 import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
@@ -33,6 +33,29 @@ test.describe("F04 accès à l’administration", () => {
     // Dans le formulaire : l'annonceur de routes de Next a aussi un role=alert, parfois rempli.
     await expect(page.locator("form").getByRole("alert")).toHaveText("Cette adresse n’a pas accès à l’administration.");
     expect(await mailCount("inconnu@exemple.test")).toBe(unknownBefore);
+  });
+
+  test("F04-E6 code pas reçu : conseils, renvoi possible après une minute, le dernier code fonctionne", async ({ page }) => {
+    await page.clock.install();
+    const before = await mailCount(OWNER);
+    await requestCode(page, OWNER);
+    await nextMail(OWNER, before);
+    await expect(page.getByText(/indésirables \(spams\)/)).toBeVisible();
+    const resend = page.getByRole("button", { name: /^Renvoyer le code/ });
+    await expect(resend).toBeDisabled();
+    await expect(resend).toHaveText(/dans \d+ s/);
+    await expectAccessible(page);
+
+    await page.clock.runFor(61_000);
+    await expect(resend).toBeEnabled();
+    await expect(resend).toHaveText("Renvoyer le code");
+    await resend.click();
+    await expect(page.locator("form").getByRole("status")).toContainText("nouveau code");
+    await expect(resend).toBeDisabled();
+    const code = codeIn(await nextMail(OWNER, before + 1));
+    await page.getByLabel("Code reçu par e-mail").fill(code);
+    await page.getByRole("button", { name: "Se connecter" }).click();
+    await expect(page).toHaveURL(/\/admin$/);
   });
 });
 
@@ -221,6 +244,27 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await expect(restore.getByRole("status")).toHaveText(/Enregistré/);
   });
 
+  test("F04-H8 contact : ajouter l’e-mail manquant, adresse invalide refusée, lien mailto sur la page publique", async ({ page }) => {
+    await page.goto("/admin/contact");
+    const add = page.getByRole("region", { name: "Ajouter un moyen de contact" });
+    await expect(add.getByLabel("Type")).toHaveValue("email");
+    await add.getByLabel("Numéro ou adresse e-mail").fill("marcel@");
+    await add.getByLabel("Texte affiché").fill("contact@exemple.test");
+    await add.getByLabel("Texte du bouton").fill("Écrire un e-mail");
+    await add.getByRole("button", { name: "Ajouter" }).click();
+    await expect(add.getByText("Adresse e-mail invalide.")).toBeVisible();
+
+    await add.getByLabel("Numéro ou adresse e-mail").fill("Contact@Exemple.test");
+    await add.getByRole("button", { name: "Ajouter" }).click();
+    await expect(page.getByRole("region", { name: "E-mail" })).toBeVisible();
+    await expect(page.getByRole("region", { name: "Ajouter un moyen de contact" })).toHaveCount(0);
+    await expectAccessible(page);
+
+    await page.goto("/");
+    await expect(page.locator("#contact").getByRole("link", { name: "contact@exemple.test" })).toHaveAttribute("href", "mailto:contact@exemple.test");
+    await serviceClient().from("contact_channels").delete().eq("type", "email");
+  });
+
   test("F04-H5 réseaux : ajouter Snapchat, le monter d’un cran, le masquer", async ({ page }) => {
     await page.goto("/admin/reseaux");
     const add = page.getByRole("region", { name: "Ajouter un réseau" });
@@ -263,6 +307,8 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     // Visiteur anonyme : sans les cookies de session du propriétaire (ceux-là sont ignorés, vérifié plus bas).
     const request = await playwright.request.newContext({ baseURL: "http://localhost:3100", storageState: { cookies: [], origins: [] } });
     await serviceClient().from("click_events").delete().gte("id", 0);
+    await page.goto("/admin/statistiques");
+    await expect(page.getByText(/^Pas encore de données/)).toBeVisible();
 
     // Un vrai navigateur, sans session : la vue et le clic sur le bouton du héros partent par sendBeacon.
     // Agent d'un Chrome de bureau ordinaire : « HeadlessChrome » est écarté comme robot.
@@ -309,6 +355,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await expect(page.getByRole("row", { name: /Facebook/ })).toContainText("1");
     await expect(page.getByRole("row", { name: /Téléphone/ })).toContainText("1");
     await expect(page.getByRole("row", { name: /Ordinateur/ })).toContainText("1");
+    await expect(page.getByText(/^Comptage depuis le .+ Dernière activité enregistrée le/)).toBeVisible();
     await expectAccessible(page);
   });
 

@@ -122,6 +122,7 @@ export const seedContent = siteContentSchema.parse({
       cardTitle: ["Un peu de soutien,", "beaucoup de motivation."],
       cardText: "Un don libre, selon votre envie et vos moyens.",
       thanks: "Merci de faire partie de l’aventure.",
+      feeNote: "Le site ne prend rien sur votre don : seuls les frais de votre service de paiement s’appliquent.",
     },
     disabledModal: {
       kicker: "Merci pour votre soutien ♡",

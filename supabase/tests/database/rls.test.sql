@@ -1,7 +1,7 @@
 -- Règles d'accès (RLS) : visiteur anonyme, compte connecté non admin, admin.
 -- Lancer : pnpm exec supabase test db   (base locale démarrée). Tout est annulé en fin de test.
 begin;
-select plan(25);
+select plan(29);
 
 -- Comptes de test (adresses fictives)
 insert into auth.users (id, email, aud, role)
@@ -15,6 +15,7 @@ values ('x', 'compte-masque', 'https://x.com/compte-masque', 'Suivre', 'Me suivr
 delete from public.click_events;
 insert into public.click_events (kind, target) values ('social', 'facebook');
 insert into storage.objects (bucket_id, name) values ('public-media', 'photo/rls-test.png');
+insert into public.link_checks (url, label, status) values ('https://exemple.test/rls', 'Lien de test', 'broken');
 
 -- ---------------------------------------------------------------------------
 -- Visiteur anonyme : lit le contenu public, n'écrit rien.
@@ -27,6 +28,7 @@ select is_empty($$ select 1 from public.admin_users $$, 'anon ne voit pas la lis
 select is_empty($$ select 1 from public.click_events $$, 'anon ne lit pas les statistiques');
 select is_empty($$ select 1 from public.click_daily_detail $$, 'anon ne lit pas le détail des statistiques');
 select is_empty($$ select 1 from storage.objects where bucket_id = 'public-media' $$, 'anon ne liste pas les fichiers du bucket');
+select is_empty($$ select 1 from public.link_checks $$, 'anon ne lit pas la vérification des liens');
 select lives_ok($$ update public.site_content set tagline = 'modifié par anon' where id = 1 $$, 'la mise à jour anonyme ne touche aucune ligne');
 select throws_ok($$ insert into public.click_events (kind) values ('page_view') $$, '42501', null, 'anon n''écrit pas de statistiques directement');
 select throws_ok($$ insert into public.social_links (network, handle, url, action_label) values ('x', 'h', 'https://x.com/h', 'a') $$,
@@ -46,6 +48,7 @@ select is_empty($$ select 1 from public.click_events $$, 'un non-admin ne lit pa
 select is_empty($$ select 1 from public.click_daily_detail $$, 'un non-admin ne lit pas le détail des statistiques');
 select is_empty($$ select 1 from storage.objects where bucket_id = 'public-media' $$, 'un non-admin ne liste pas les fichiers du bucket');
 select is_empty($$ select 1 from public.social_links where not visible $$, 'un non-admin ne voit pas un réseau masqué');
+select throws_ok($$ insert into public.link_checks (url, label, status) values ('https://x.test', 'x', 'ok') $$, '42501', null, 'un non-admin n''écrit pas de vérification de lien');
 reset role;
 select is((select payment_url from public.donation_settings where id = 1), null, 'le lien de paiement est intact');
 
@@ -59,6 +62,8 @@ select results_eq($$ select count(*)::int from public.click_events $$, array[1],
 select results_eq($$ select sum(total)::int from public.click_daily_detail $$, array[1], 'un admin lit le détail des statistiques');
 select results_eq($$ select count(*)::int from storage.objects where name = 'photo/rls-test.png' $$, array[1], 'un admin liste les fichiers du bucket (suppression des anciennes photos)');
 select lives_ok($$ update public.social_links set followers = 400000 where network = 'facebook' $$, 'un admin modifie un compteur');
+select results_eq($$ select count(*)::int from public.link_checks $$, array[1], 'un admin lit la vérification des liens');
+select lives_ok($$ insert into public.link_checks (url, label, status, http_status) values ('https://exemple.test/autre', 'Autre', 'ok', 200) $$, 'un admin enregistre une vérification de lien');
 select throws_ok($$ update public.donation_settings set enabled = true, payment_url = null where id = 1 $$,
   '23514', null, 'les dons ne s''activent pas sans lien de paiement');
 reset role;

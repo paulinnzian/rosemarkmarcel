@@ -51,6 +51,17 @@ test.describe("F01 un visiteur découvre le créateur et le suit sur un réseau"
     await expect(page.getByRole("button", { name: /Me soutenir/ }).or(page.getByRole("link", { name: /Me soutenir/ }))).toBeVisible();
     await expectAccessible(page);
   });
+
+  test("F01-E5 pied de page : la page Confidentialité dit ce qui est compté ; la section Soutenir dit qui prend des frais", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#soutenir")).toContainText("Le site ne prend rien sur votre don");
+    await page.getByRole("contentinfo").getByRole("link", { name: "Confidentialité" }).click();
+    await expect(page).toHaveURL(/\/confidentialite$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Confidentialité");
+    await expect(page.getByText(/ne dépose aucun cookie/)).toBeVisible();
+    await expectNoHorizontalScroll(page);
+    await expectAccessible(page);
+  });
 });
 
 test.describe("F02 une marque contacte le créateur", () => {

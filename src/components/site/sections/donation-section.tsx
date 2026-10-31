@@ -26,6 +26,7 @@ export function DonationSection({ donation }: { donation: Donation }) {
             <p className="mb-6 mt-2 text-xs text-muted">{texts.cardText}</p>
             <SupportButton donation={donation} variant="section" />
             <p className="mt-4 text-center text-xs text-muted">{texts.thanks}</p>
+            {texts.feeNote && <p className="mt-2 text-center text-xs text-muted">{texts.feeNote}</p>}
           </div>
         </div>
       </div>
