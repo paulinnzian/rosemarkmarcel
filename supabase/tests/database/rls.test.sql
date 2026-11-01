@@ -1,7 +1,7 @@
 -- Règles d'accès (RLS) : visiteur anonyme, compte connecté non admin, admin.
 -- Lancer : pnpm exec supabase test db   (base locale démarrée). Tout est annulé en fin de test.
 begin;
-select plan(29);
+select plan(32);
 
 -- Comptes de test (adresses fictives)
 insert into auth.users (id, email, aud, role)
@@ -38,6 +38,9 @@ select throws_ok($$ insert into public.social_links (network, handle, url, actio
   '42501', null, 'anon n''ajoute pas de réseau');
 reset role;
 select isnt((select tagline from public.site_content where id = 1), 'modifié par anon', 'le contenu est intact après la tentative anonyme');
+select ok(not has_function_privilege('anon', 'public.is_owner()', 'execute'), 'anon n''exécute pas is_owner()');
+select ok(has_function_privilege('anon', 'public.is_admin()', 'execute'), 'anon exécute is_admin() (politiques de lecture publique)');
+select ok(has_function_privilege('authenticated', 'public.is_owner()', 'execute'), 'un compte connecté exécute is_owner()');
 
 -- ---------------------------------------------------------------------------
 -- Compte connecté mais absent de la liste blanche.
