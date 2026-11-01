@@ -3,3 +3,5 @@ allowBuilds:
   supabase: true
   sharp: false
   unrs-resolver: false
+
+nodeLinker: hoisted
