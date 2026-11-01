@@ -45,5 +45,17 @@ pnpm dev                     # http://localhost:3000
    - URL Configuration : Site URL `https://<domaine>`, Redirect URLs `https://<domaine>/admin/auth/callback`
    - Email Templates > Magic Link : sujet « Votre code de connexion », contenu de `supabase/templates/magic-link.html`
    - Sign In / Providers : « Allow new users to sign up » désactivé, fournisseur Email activé
+   - Ajouter un admin uniquement avec `pnpm admin:add` (adresse confirmée d'office). Un compte créé par l'inscription
+     publique reste non confirmé : Supabase lui envoie alors l'e-mail « Confirm signup » au lieu du code de connexion.
 6. **Pays dans les statistiques** : vide sur Hostinger seul. Il se remplit si Cloudflare est placé devant le domaine
    (en-tête `cf-ipcountry`).
+7. **E-mails (Resend)** : les codes de connexion partent par le SMTP de Resend, depuis un sous-domaine dédié
+   (`mail.<domaine>`) pour ne pas exposer la réputation du domaine principal. Sans cette étape, Supabase envoie depuis
+   `noreply@mail.app.supabase.io`, limité à quelques e-mails par heure et souvent classé en spam.
+   - Resend > Domains > Add Domain : `mail.<domaine>`, puis copier les enregistrements affichés (DKIM, SPF et MX
+     `send.mail`) dans hPanel > Domaines > DNS, et cliquer sur Verify DNS Records
+   - Resend > API Keys : une clé « Sending access » limitée à `mail.<domaine>`
+   - Supabase > Authentication > Emails > SMTP Settings : activer Custom SMTP, Sender `connexion@mail.<domaine>`,
+     nom `Rosemark Marcel`, Host `smtp.resend.com`, Port `465`, Username `resend`, Password = la clé Resend
+   - Supabase > Authentication > Rate Limits : « emails per hour » à 30
+   - En local, rien ne change : les e-mails arrivent dans Mailpit (`http://127.0.0.1:54324`).
