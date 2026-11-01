@@ -9,7 +9,7 @@ const PUBLIC_ADMIN_PATHS = ["/admin/connexion", "/admin/auth/"];
 
 /**
  * Sur /admin : rafraîchit la session Supabase (cookies) et renvoie vers la connexion sans session.
- *    Vérification optimiste seulement : chaque page et chaque action appelle requireAdmin().
+ * Vérification optimiste seulement : chaque page et chaque action appelle requireAdmin().
  */
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });

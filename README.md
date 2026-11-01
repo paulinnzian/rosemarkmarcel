@@ -47,8 +47,9 @@ pnpm dev                     # http://localhost:3000
    - Sign In / Providers : « Allow new users to sign up » désactivé, fournisseur Email activé
    - Ajouter un admin uniquement avec `pnpm admin:add` (adresse confirmée d'office). Un compte créé par l'inscription
      publique reste non confirmé : Supabase lui envoie alors l'e-mail « Confirm signup » au lieu du code de connexion.
-6. **Pays dans les statistiques** : vide sur Hostinger seul. Il se remplit si Cloudflare est placé devant le domaine
-   (en-tête `cf-ipcountry`).
+6. **Pays dans les statistiques** : rempli par l'en-tête `cf-ipcountry` tant que les enregistrements DNS du domaine et
+   de `www` sont proxifiés par Cloudflare (nuage orange). En DNS seul (nuage gris), le pays reste vide et la règle de
+   redirection `www` vers le domaine ne s'applique pas non plus.
 7. **E-mails (Resend)** : les codes de connexion partent par le SMTP de Resend, depuis un sous-domaine dédié
    (`mail.<domaine>`) pour ne pas exposer la réputation du domaine principal. Sans cette étape, Supabase envoie depuis
    `noreply@mail.app.supabase.io`, limité à quelques e-mails par heure et souvent classé en spam.
@@ -59,3 +60,14 @@ pnpm dev                     # http://localhost:3000
      nom `Rosemark Marcel`, Host `smtp.resend.com`, Port `465`, Username `resend`, Password = la clé Resend
    - Supabase > Authentication > Rate Limits : « emails per hour » à 30
    - En local, rien ne change : les e-mails arrivent dans Mailpit (`http://127.0.0.1:54324`).
+   - Sur l'offre gratuite, Supabase refuse de modifier le modèle d'e-mail (étape 5) tant qu'aucun SMTP personnalisé
+     n'est configuré : l'e-mail par défaut ne contient qu'un lien, sans le code à 6 chiffres. Resend passe donc avant.
+   - `supabase/config.toml` ne règle que la base locale : la production se règle dans le tableau de bord (ou
+     l'API de gestion). Code de connexion attendu par le formulaire : 6 chiffres, valable 900 secondes.
+8. **Vérification après chaque déploiement** :
+
+   ```bash
+   curl -sI https://www.<domaine>/admin | head -3        # 308 vers https://<domaine>/admin (règle Cloudflare)
+   curl -s -o /dev/null -w '%{http_code}\n' https://<domaine>/design   # 404
+   curl -s https://<domaine>/sitemap.xml | grep '<loc>'  # adresses en https://<domaine>, jamais localhost
+   ```

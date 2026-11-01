@@ -33,8 +33,8 @@ export function sameOrigin(headers: HeaderSource): boolean {
   }
 }
 
-// Pays : en-tête posé par le réseau devant le serveur (Cloudflare, CloudFront, Vercel). Hébergé tel quel sur Hostinger
-// Node.js, aucun n'est présent et le pays reste vide. « XX » = pays inconnu chez Cloudflare.
+// Pays : en-tête posé par le réseau devant le serveur (Cloudflare, CloudFront, Vercel). Avec Cloudflare en proxy
+// (nuage orange), cf-ipcountry est présent ; sans proxy, aucun ne l'est et le pays reste vide. « XX » = pays inconnu.
 const COUNTRY_HEADERS = ["cf-ipcountry", "cloudfront-viewer-country", "x-vercel-ip-country"];
 
 export function countryOf(headers: HeaderSource): string | null {
