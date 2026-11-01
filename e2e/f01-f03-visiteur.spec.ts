@@ -106,4 +106,15 @@ test.describe("F03 un fan veut faire un don (dons fermés)", () => {
     await expect(dialog).toBeHidden();
     await expect(trigger).toBeFocused();
   });
+
+  test("F03-H2 la modale mène aux réseaux et se ferme en changeant de page", async ({ page }) => {
+    await page.goto("/");
+    await scrollPastFirstScreen(page);
+    await page.getByRole("button", { name: /^Me soutenir/ }).click();
+    const dialog = page.getByRole("dialog");
+    await dialog.getByRole("link", { name: "Voir ses réseaux" }).click();
+    await expect(page).toHaveURL(/\/communaute$/);
+    await expect(dialog).toBeHidden();
+    await expect(page.locator("html")).not.toHaveCSS("overflow", "hidden");
+  });
 });

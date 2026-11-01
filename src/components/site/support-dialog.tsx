@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useId, useRef } from "react";
 
 import { buttonClasses } from "@/components/site/button-styles";
@@ -58,6 +59,17 @@ export function SupportDialog({ label, triggerClassName, trackTarget, modal }: S
               {modal.close}
             </button>
           </form>
+          {/* Le texte invite à suivre Marcel : le lien y mène. Après « Fermer », qui garde le focus à l'ouverture ;
+              la modale se ferme, sinon elle resterait ouverte sur la page suivante (le bouton vit dans le gabarit). */}
+          <Link
+            href="/communaute"
+            onClick={() => dialogRef.current?.close()}
+            className={buttonClasses("text", "mt-1 w-full")}
+            data-track="cta"
+            data-track-target="dons-fermes-reseaux"
+          >
+            Voir ses réseaux
+          </Link>
         </div>
       </dialog>
     </>
