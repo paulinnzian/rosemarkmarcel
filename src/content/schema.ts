@@ -117,6 +117,17 @@ export const pagesSchema = z.object({
     ctaText: text,
     whatsappMessage: text.max(500),
   }),
+  contact: z.object({
+    kicker: text,
+    heading: headingSchema,
+    intro: text,
+    whatsappMessage: text.max(500),
+    socialsHeading: text,
+    socialsText: text,
+    brandsHeading: text,
+    brandsText: text,
+    brandsCta: ctaSchema,
+  }),
 });
 
 export const siteContentSchema = z.object({

@@ -18,8 +18,9 @@ export function SiteHeader({ creatorName, tagline, nav }: SiteHeaderProps) {
           </span>
           <span className="mt-1 block text-kicker uppercase tracking-[0.32em]">{tagline}</span>
         </Link>
-        <nav aria-label="Navigation principale" className="-mx-1 overflow-x-auto">
-          <ul className="flex gap-x-[18px] whitespace-nowrap px-1 lg:gap-x-8">
+        {/* Cinq rubriques : sur deux lignes en mobile plutôt qu'un défilement caché. */}
+        <nav aria-label="Navigation principale" className="-mx-1">
+          <ul className="flex flex-wrap gap-x-[18px] whitespace-nowrap px-1 lg:gap-x-8">
             {nav.map((item) => (
               <li key={item.href}>
                 <NavLink href={item.href} label={item.label} />

@@ -36,6 +36,11 @@ export default function ConfidentialitePage() {
           <ul className="mt-2 list-disc pl-5">
             <li>le type d’événement et le bouton concerné ;</li>
             <li>la page visitée ;</li>
+            <li>
+              pour la première page vue, l’origine de la visite réduite à un nom (un moteur de recherche ou un réseau social, comme
+              « Google » ou « Facebook », sinon « autre site ») ou la campagne publicitaire nommée dans le lien ; jamais l’adresse
+              de la page d’où vous venez ;
+            </li>
             <li>le pays, quand le réseau qui sert le site l’indique, sans ville ni adresse ;</li>
             <li>le type d’appareil : téléphone, tablette ou ordinateur ;</li>
             <li>la date et l’heure.</li>

@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 import { unstable_cache } from "next/cache";
 
 import { seedContent } from "@/content";
@@ -10,7 +12,22 @@ import { createPublicClient } from "@/lib/supabase/public-client";
 /** Tag du contenu public : chaque enregistrement de l'admin appelle updateTag(CONTENT_TAG). */
 export const CONTENT_TAG = "contenu";
 
-const readCachedContent = unstable_cache(readContentFromDatabase, ["site-content"], {
+/** Forme du contenu (ses clés, récursivement), sans les valeurs. */
+function shapeOf(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.length > 0 ? shapeOf(value[0]) : ""}]`;
+  if (value === null || typeof value !== "object") return "";
+  const record = value as Record<string, unknown>;
+  return `{${Object.keys(record)
+    .sort()
+    .map((key) => `${key}:${shapeOf(record[key])}`)
+    .join(",")}}`;
+}
+
+// Le cache de données survit aux builds (.next/cache) : sans la forme dans la clé, un déploiement qui ajoute un
+// champ relirait le contenu mis en cache par la version précédente, sans ce champ, et la page échouerait.
+const CONTENT_SHAPE = createHash("sha256").update(shapeOf(seedContent)).digest("hex").slice(0, 12);
+
+const readCachedContent = unstable_cache(readContentFromDatabase, ["site-content", CONTENT_SHAPE], {
   tags: [CONTENT_TAG],
 });
 

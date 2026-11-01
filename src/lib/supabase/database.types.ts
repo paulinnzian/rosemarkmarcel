@@ -21,14 +21,14 @@ export type Database = {
                   ]
                 },"click_events": {
                   Row: {
-                    "country": string | null,"device": string | null,"id": number,"kind": string,"occurred_at": string,"path": string,"target": string | null
+                    "campaign": string | null,"country": string | null,"device": string | null,"id": number,"kind": string,"occurred_at": string,"path": string,"source": string | null,"target": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "country"?: string | null,"device"?: string | null,"id"?: never,"kind": string,"occurred_at"?: string,"path"?: string,"target"?: string | null
+                    "campaign"?: string | null,"country"?: string | null,"device"?: string | null,"id"?: never,"kind": string,"occurred_at"?: string,"path"?: string,"source"?: string | null,"target"?: string | null
                   }
                   Update: {
-                    "country"?: string | null,"device"?: string | null,"id"?: never,"kind"?: string,"occurred_at"?: string,"path"?: string,"target"?: string | null
+                    "campaign"?: string | null,"country"?: string | null,"device"?: string | null,"id"?: never,"kind"?: string,"occurred_at"?: string,"path"?: string,"source"?: string | null,"target"?: string | null
                   }
                   Relationships: [
                     
@@ -117,6 +117,14 @@ export type Database = {
                 },"click_daily_detail": {
                   Row: {
                     "country": string | null,"day": string | null,"device": string | null,"kind": string,"target": string | null,"total": number | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
+                  ]
+                },"visit_sources": {
+                  Row: {
+                    "campaign": string | null,"day": string | null,"source": string | null,"total": number | null
                   }
                   ComputedFields: never
                   Relationships: [

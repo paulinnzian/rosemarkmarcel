@@ -29,6 +29,8 @@ pnpm dev                     # http://localhost:3000
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` et `SUPABASE_SERVICE_ROLE_KEY` : Supabase > Project Settings > API Keys
    - `NEXT_PUBLIC_SITE_URL` = `https://<domaine>` (sans barre finale)
    - `CRON_SECRET` = une longue valeur aléatoire (`openssl rand -hex 32`)
+   - `GOOGLE_SITE_VERIFICATION` et `BING_SITE_VERIFICATION` (facultatives) : jetons des balises de vérification de
+     Google Search Console et Bing Webmaster Tools, lus au build (voir `docs/referencement.md`)
 3. **Domaine** : `NEXT_PUBLIC_SITE_URL` donne l'adresse canonique. Cloudflare est autoritatif pour le DNS et sa règle
    de redirection `Canonicaliser www vers apex` renvoie `www.<domaine>` vers `<domaine>` en 308, en conservant le
    chemin, la query string et la méthode HTTP. La canonicalisation est faite à l'edge, avant l'application Hostinger.
@@ -64,7 +66,10 @@ pnpm dev                     # http://localhost:3000
      n'est configuré : l'e-mail par défaut ne contient qu'un lien, sans le code à 6 chiffres. Resend passe donc avant.
    - `supabase/config.toml` ne règle que la base locale : la production se règle dans le tableau de bord (ou
      l'API de gestion). Code de connexion attendu par le formulaire : 6 chiffres, valable 900 secondes.
-8. **Vérification après chaque déploiement** :
+8. **Migrations de la base** : toujours **après** le déploiement du code qui les attend, jamais avant (un menu en
+   `/a-propos` est refusé par l'ancien code, qui sert alors les textes initiaux). Puis, dans l'admin, Contenus >
+   Enregistrer une fois : le site relit le contenu (cache « contenu ») au lieu d'attendre la prochaine modification.
+9. **Vérification après chaque déploiement** :
 
    ```bash
    curl -sI https://www.<domaine>/admin | head -3        # 308 vers https://<domaine>/admin (règle Cloudflare)

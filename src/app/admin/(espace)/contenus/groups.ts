@@ -149,6 +149,21 @@ export const CONTENT_GROUPS: ContentGroup[] = [
       { kind: "paragraph", path: "pages.collaborations.whatsappMessage", label: "Message WhatsApp pré-rempli" },
     ],
   },
+  {
+    id: "page-contact",
+    title: "Page Contact",
+    fields: [
+      { kind: "text", path: "pages.contact.kicker", label: "Petit titre" },
+      { kind: "heading", path: "pages.contact.heading", label: "Titre" },
+      { kind: "paragraph", path: "pages.contact.intro", label: "Introduction" },
+      { kind: "paragraph", path: "pages.contact.whatsappMessage", label: "Message WhatsApp pré-rempli" },
+      { kind: "text", path: "pages.contact.socialsHeading", label: "Titre « messages privés »" },
+      { kind: "paragraph", path: "pages.contact.socialsText", label: "Texte « messages privés »" },
+      { kind: "text", path: "pages.contact.brandsHeading", label: "Titre « marques »" },
+      { kind: "paragraph", path: "pages.contact.brandsText", label: "Texte « marques »" },
+      { kind: "text", path: "pages.contact.brandsCta.label", label: "Texte du bouton « marques »" },
+    ],
+  },
 ];
 
 /** Titre et texte de chaque bloc d'une liste de taille fixe (valeurs, formats, étapes). */

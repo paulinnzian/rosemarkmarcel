@@ -18,5 +18,11 @@ export function mergePages(stored: unknown): Pages {
     return seed[key];
   }
 
-  return { about: page("about"), universe: page("universe"), community: page("community"), collaborations: page("collaborations") };
+  return {
+    about: page("about"),
+    universe: page("universe"),
+    community: page("community"),
+    collaborations: page("collaborations"),
+    contact: page("contact"),
+  };
 }

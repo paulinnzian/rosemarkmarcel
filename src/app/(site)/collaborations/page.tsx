@@ -7,11 +7,13 @@ import { FormatsList } from "@/components/site/pages/collaborations/formats-list
 import { StepsList } from "@/components/site/pages/collaborations/steps-list";
 import { WhatsappButton } from "@/components/site/pages/collaborations/whatsapp-button";
 import { pageMetadata } from "@/lib/page-metadata";
+import { breadcrumb, JsonLd } from "@/lib/seo/json-ld";
 import { getSiteContent } from "@/lib/site-data";
 
 export const metadata: Metadata = pageMetadata(
-  "Collaborations",
+  "Collaborations de marque avec Le Repos",
   "Marques et agences : l’audience de Rosemark Marcel réseau par réseau, les formats de collaboration autour du Repos et un contact direct sur WhatsApp.",
+  "/collaborations",
 );
 
 // Visiteur : une marque. D'abord les chiffres et ce qu'on peut faire ensemble ; action principale : écrire sur WhatsApp.
@@ -22,6 +24,7 @@ export default async function CollaborationsPage() {
 
   return (
     <main id="contenu">
+      <JsonLd data={breadcrumb("Collaborations", "/collaborations")} />
       <PageIntro
         kicker={page.kicker}
         heading={page.heading}

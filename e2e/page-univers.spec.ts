@@ -95,7 +95,7 @@ test.describe("Page Mon univers", () => {
 
   test("le lien partagé annonce la page, pas l’accueil", async ({ page }) => {
     await page.goto("/univers");
-    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Mon univers · Rosemark Marcel");
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Mon univers : les épisodes du Repos · Rosemark Marcel");
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/opengraph-image$/);
     await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute("content", "1200");
     const image = new URL((await page.locator('meta[property="og:image"]').getAttribute("content")) ?? "");

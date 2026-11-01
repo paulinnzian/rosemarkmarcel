@@ -6,6 +6,8 @@ export type Episode = {
   /** Date ISO de publication. */
   publishedAt: string;
   thumbnail: string;
+  /** Texte de la vidéo sur YouTube (media:description), absent s'il est vide. */
+  description?: string;
 };
 
 const FEED_URL = "https://www.youtube.com/feeds/videos.xml?channel_id=";
@@ -32,7 +34,14 @@ export function parseFeed(xml: string): Episode[] {
     const title = tag(entry, "title");
     const publishedAt = tag(entry, "published");
     if (!id || !/^[\w-]{11}$/.test(id) || !title || !publishedAt) continue;
-    episodes.push({ id, title: decode(title).trim(), publishedAt, thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg` });
+    const description = decode(tag(entry, "media:description") ?? "").trim();
+    episodes.push({
+      id,
+      title: decode(title).trim(),
+      publishedAt,
+      thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      ...(description && { description }),
+    });
   }
   return episodes;
 }

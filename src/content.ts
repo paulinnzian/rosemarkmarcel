@@ -12,6 +12,7 @@ export const seedContent = siteContentSchema.parse({
     { label: "Mon univers", href: "/univers" },
     { label: "La communauté", href: "/communaute" },
     { label: "Collaborations", href: "/collaborations" },
+    { label: "Contact", href: "/contact" },
   ],
   hero: {
     heading: { lines: ["Un peu de rire.", "Beaucoup", "de Repos."], highlightFrom: 1 },
@@ -129,6 +130,17 @@ export const seedContent = siteContentSchema.parse({
       ctaHeading: "Parlons de votre projet",
       ctaText: "Le plus simple est de m’écrire sur WhatsApp. Je vous réponds dès que possible.",
       whatsappMessage: "Bonjour Marcel, je souhaite vous proposer une collaboration pour ma marque.",
+    },
+    contact: {
+      kicker: "Contact",
+      heading: { lines: ["Écrivez-moi,", "je vous réponds."], highlightFrom: 1 },
+      intro: "Une question, un message, une idée ? Le plus simple est de m’écrire sur WhatsApp.",
+      whatsappMessage: "Bonjour Marcel, je vous écris depuis votre site.",
+      socialsHeading: "En message privé",
+      socialsText: "Vous pouvez aussi m’écrire directement sur le réseau que vous utilisez.",
+      brandsHeading: "Vous êtes une marque ?",
+      brandsText: "Mon audience, les formats possibles et la façon dont on travaille ensemble sont sur la page Collaborations.",
+      brandsCta: { label: "Voir les collaborations", href: "/collaborations" },
     },
   },
   socials: [

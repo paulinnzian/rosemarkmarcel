@@ -4,6 +4,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin/session";
 import { lastDays, summarize, type StatRow } from "@/lib/admin/stats";
 import { networkName } from "@/lib/networks";
+import { rankSources, sourceLabel, type RankedSource } from "@/lib/visit-source";
 
 import { DailyChart } from "./daily-chart";
 
@@ -11,6 +12,7 @@ export const metadata: Metadata = { title: "Statistiques" };
 
 const PERIODS = [7, 30, 90] as const;
 const number = new Intl.NumberFormat("fr-FR");
+const percent = new Intl.NumberFormat("fr-FR", { style: "percent", maximumFractionDigits: 0 });
 const regions = new Intl.DisplayNames("fr-FR", { type: "region" });
 const dayFormat = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeZone: "Africa/Abidjan" });
 const momentFormat = new Intl.DateTimeFormat("fr-FR", { dateStyle: "long", timeStyle: "short", timeZone: "Africa/Abidjan" });
@@ -23,6 +25,24 @@ const DONATION_BUTTONS: Record<string, string> = {
   "section-ferme": "Section Soutenir (dons fermés)",
   "floating-ferme": "Bouton épinglé (dons fermés)",
 };
+
+const PAGE_SIZE = 1000;
+
+/**
+ * Toutes les lignes d'une vue agrégée : l'API de Supabase en rend 1000 au plus par requête, et une période de 90
+ * jours (jour × type × cible × appareil × pays) les dépasse vite. Sans pagination, les totaux seraient faux sans erreur.
+ */
+async function allRows<T>(
+  page: (from: number, to: number) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>,
+): Promise<{ data: T[]; error: { message: string } | null }> {
+  const rows: T[] = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await page(from, from + PAGE_SIZE - 1);
+    if (error) return { data: rows, error };
+    rows.push(...(data ?? []));
+    if ((data ?? []).length < PAGE_SIZE) return { data: rows, error: null };
+  }
+}
 
 function countryName(code: string): string {
   if (code === "inconnu") return "Inconnu";
@@ -40,13 +60,37 @@ export default async function StatistiquesPage({ searchParams }: PageProps<"/adm
   const days = lastDays(period, new Date());
 
   // Bornes du comptage : sans elles, « 0 » ne dit pas si personne n'est venu ou si rien n'est encore enregistré.
-  const [{ data, error }, { data: first }, { data: last }] = await Promise.all([
-    supabase.from("click_daily_detail").select("day, kind, target, device, country, total").gte("day", days[0]),
+  const [{ data, error }, { data: first }, { data: last }, { data: sourceData, error: sourcesError }] = await Promise.all([
+    allRows((from, to) =>
+      supabase
+        .from("click_daily_detail")
+        .select("day, kind, target, device, country, total")
+        .gte("day", days[0])
+        .order("day")
+        .order("kind")
+        .order("target")
+        .order("device")
+        .order("country")
+        .range(from, to),
+    ),
     supabase.from("click_events").select("occurred_at").order("occurred_at", { ascending: true }).limit(1).maybeSingle(),
     supabase.from("click_events").select("occurred_at").order("occurred_at", { ascending: false }).limit(1).maybeSingle(),
+    // Même période que le reste de la page (les jours de lastDays, aujourd'hui compris).
+    allRows((from, to) =>
+      supabase
+        .from("visit_sources")
+        .select("source, campaign, total")
+        .gte("day", days[0])
+        .lte("day", days[days.length - 1])
+        .order("day")
+        .order("source")
+        .order("campaign")
+        .range(from, to),
+    ),
   ]);
   const stats = summarize((data ?? []) as StatRow[], days);
   const { totals } = stats;
+  const sources = rankSources(sourceData ?? []);
 
   const tiles = [
     { label: "Vues de la page", value: totals.views },
@@ -117,6 +161,8 @@ export default async function StatistiquesPage({ searchParams }: PageProps<"/adm
             <Breakdown title="Visites par appareil" rows={stats.byDevice} name={(key) => DEVICES[key] ?? key} />
             <Breakdown title="Visites par pays" rows={stats.byCountry} name={countryName} />
           </div>
+
+          <VisitSources rows={sources.rows} failed={sourcesError !== null} />
         </>
       )}
     </>
@@ -142,6 +188,72 @@ function Breakdown({ title, rows, name }: { title: string; rows: { key: string; 
             ))}
           </tbody>
         </table>
+      )}
+    </section>
+  );
+}
+
+function VisitSources({ rows, failed }: { rows: RankedSource[]; failed: boolean }) {
+  const withCampaign = rows.some((row) => row.campaign !== null);
+  return (
+    <section aria-labelledby="stats-provenance" className="mt-6 rounded-lg bg-surface p-6">
+      <h2 id="stats-provenance" className="text-label">
+        D’où viennent les visites
+      </h2>
+      <p className="mt-2 max-w-prose text-sm text-muted">
+        Le site d’origine réduit à son nom (Google, Facebook…), ou la campagne indiquée dans le lien (utm_source, utm_campaign). Jamais
+        l’adresse exacte de la page d’origine.
+      </p>
+      {failed ? (
+        <p role="alert" className="mt-3 text-sm font-bold text-danger">
+          Impossible de lire la provenance des visites pour le moment. Rechargez la page.
+        </p>
+      ) : rows.length === 0 ? (
+        <p className="mt-3 text-sm text-muted">Pas de visite sur cette période, donc pas de provenance à montrer.</p>
+      ) : (
+        <div className="mt-3 overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-line text-xs text-muted">
+                <th scope="col" className="py-2 font-normal">
+                  Source
+                </th>
+                {withCampaign && (
+                  <th scope="col" className="py-2 pl-3 font-normal">
+                    Campagne
+                  </th>
+                )}
+                <th scope="col" className="py-2 pl-3 text-right font-normal">
+                  Visites
+                </th>
+                <th scope="col" className="py-2 pl-3 text-right font-normal">
+                  Part
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={`${row.source}|${row.campaign ?? ""}`} className="border-b border-line last:border-0">
+                  <th scope="row" className="py-2 font-normal">
+                    {sourceLabel(row.source)}
+                  </th>
+                  {withCampaign && (
+                    <td className="py-2 pl-3 [overflow-wrap:anywhere]">
+                      {row.campaign ?? (
+                        <>
+                          <span aria-hidden="true">—</span>
+                          <span className="sr-only">aucune</span>
+                        </>
+                      )}
+                    </td>
+                  )}
+                  <td className="py-2 pl-3 text-right font-bold tabular-nums">{number.format(row.total)}</td>
+                  <td className="py-2 pl-3 text-right tabular-nums">{percent.format(row.share)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </section>
   );

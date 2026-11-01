@@ -4,13 +4,13 @@ vi.mock("server-only", () => ({}));
 
 const { getLatestEpisodes, parseFeed } = await import("./youtube");
 
-const entry = (id: string, title: string, published = "2026-07-31T12:00:00+00:00") => `
+const entry = (id: string, title: string, published = "2026-07-31T12:00:00+00:00", description?: string) => `
   <entry>
     <id>yt:video:${id}</id>
     <yt:videoId>${id}</yt:videoId>
     <title>${title}</title>
     <published>${published}</published>
-    <media:group><media:title>${title}</media:title></media:group>
+    <media:group><media:title>${title}</media:title>${description === undefined ? "" : `<media:description>${description}</media:description>`}</media:group>
   </entry>`;
 
 const feed = (...entries: string[]) => `<?xml version="1.0"?><feed><title>Chaîne</title>${entries.join("")}</feed>`;
@@ -33,6 +33,17 @@ describe("parseFeed", () => {
 
   it("décode les entités numériques (décimales et hexadécimales)", () => {
     expect(parseFeed(feed(entry("yHXyB-Yb4z4", "L&#8217;épisode d&#x27;été &amp;#38;")))[0].title).toBe("L’épisode d'été &#38;");
+  });
+
+  it("lit la description de la vidéo, décodée, et l'omet quand elle est vide", () => {
+    const [described, blank] = parseFeed(
+      feed(
+        entry("PCVTcl2fSAU", "le repos 14", undefined, "\n  Un peu de rire &amp; beaucoup de Repos.\n#LeRepos  "),
+        entry("yHXyB-Yb4z4", "le repos 13", undefined, "   "),
+      ),
+    );
+    expect(described.description).toBe("Un peu de rire & beaucoup de Repos.\n#LeRepos");
+    expect(blank).not.toHaveProperty("description");
   });
 
   it("ignore une entrée sans identifiant valide", () => {

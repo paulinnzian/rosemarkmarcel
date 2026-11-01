@@ -5,11 +5,14 @@ import type { Metadata } from "next";
  * s'annoncerait avec le titre et le texte de l'accueil. Un `openGraph` de page remplace tout celui du gabarit,
  * image comprise : l'image du site (src/app/opengraph-image.tsx) est donc redonnée ici.
  */
-export function pageMetadata(title: string, description: string): Metadata {
+export function pageMetadata(title: string, description: string, path: `/${string}`): Metadata {
   return {
     title,
     description,
+    // Adresse de référence sans paramètres (utm_…) : les liens de campagne ne créent pas de doublons pour les moteurs.
+    alternates: { canonical: path },
     openGraph: {
+      url: path,
       type: "website",
       locale: "fr_FR",
       siteName: "Rosemark Marcel",

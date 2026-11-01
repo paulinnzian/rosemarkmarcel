@@ -7,11 +7,13 @@ import { SupportList } from "@/components/site/pages/communaute/support-list";
 import { SocialCard } from "@/components/site/social-card";
 import { formatUpdateDate } from "@/lib/format";
 import { pageMetadata } from "@/lib/page-metadata";
+import { breadcrumb, JsonLd } from "@/lib/seo/json-ld";
 import { getSiteContent } from "@/lib/site-data";
 
 export const metadata: Metadata = pageMetadata(
-  "La communauté",
-  "Où suivre Rosemark Marcel et Le Repos sur les réseaux, et comment soutenir l’aventure : s’abonner, partager, faire un don.",
+  "La communauté du Repos sur les réseaux",
+  "Où suivre Rosemark Marcel et Le Repos sur les réseaux sociaux, et comment soutenir l’aventure : s’abonner, partager le site ou faire un don.",
+  "/communaute",
 );
 
 const NETWORKS_ID = "reseaux";
@@ -31,6 +33,7 @@ export default async function CommunautePage() {
 
   return (
     <main id="contenu">
+      <JsonLd data={breadcrumb("La communauté", "/communaute")} />
       <PageIntro
         kicker={texts.kicker}
         heading={texts.heading}
