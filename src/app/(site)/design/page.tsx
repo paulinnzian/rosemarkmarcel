@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import { Field } from "@/components/admin/field";
 import { Switch } from "@/components/admin/switch";
@@ -44,6 +45,9 @@ function Block({ title, children }: { title: string; children: React.ReactNode }
 }
 
 export default function DesignPage() {
+  // Planche de style pour le développement uniquement : en ligne, elle montrerait un faux lien de paiement.
+  if (process.env.NODE_ENV === "production") notFound();
+
   const content = seedContent;
   const disabledDonation = content.donation;
   const enabledDonation: Donation = { ...content.donation, enabled: true, paymentUrl: "https://example.com/paiement-exemple" };
