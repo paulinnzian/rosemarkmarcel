@@ -1,3 +1,4 @@
+import { CtaLink } from "@/components/site/cta-link";
 import { FabricMotif } from "@/components/site/fabric-motif";
 import type { ContactChannel } from "@/content/schema";
 
@@ -10,10 +11,20 @@ type CollaborationsCtaProps = {
   contacts: ContactChannel[];
 };
 
-/** Bande finale : WhatsApp (action principale), puis le téléphone en lien d'appel, affiché en clair. */
+/**
+ * Bande finale : WhatsApp (action principale), puis le téléphone en lien d'appel, affiché en clair. Les deux masqués
+ * dans l'admin : l'e-mail s'il est visible, sinon la page Contact, pour que la page garde toujours une action.
+ */
 export function CollaborationsCta({ heading, text, whatsappMessage, contacts }: CollaborationsCtaProps) {
   const whatsapp = contacts.find((channel) => channel.type === "whatsapp");
   const phone = contacts.find((channel) => channel.type === "phone");
+  const email = contacts.find((channel) => channel.type === "email");
+  const fallback =
+    whatsapp || phone
+      ? null
+      : email
+        ? { label: email.label, href: `mailto:${email.value}` }
+        : { label: "Voir comment me joindre", href: "/contact" };
 
   return (
     <section aria-labelledby="ecrire-titre" className="on-accent bg-ink text-on-accent">
@@ -38,6 +49,7 @@ export function CollaborationsCta({ heading, text, whatsappMessage, contacts }: 
               {phone.display}
             </a>
           )}
+          {fallback && <CtaLink cta={fallback} variant="primary" track="collaborations-fin" />}
         </div>
       </div>
     </section>

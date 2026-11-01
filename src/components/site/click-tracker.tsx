@@ -7,9 +7,11 @@ import { visitSource } from "@/lib/visit-source";
 
 const ENDPOINT = "/api/evenements";
 
-// Une fois par chargement du document : la provenance n'accompagne que la vue de la page d'arrivée. Au niveau
-// du module, et non dans le composant : elle survit à un remontage (passage par la page 404, par exemple).
-let landingCounted = false;
+// Dernière adresse comptée pendant ce chargement du document (null : l'arrivée n'est pas encore comptée). La
+// provenance n'accompagne que la vue de la page d'arrivée. Au niveau du module, et non dans le composant : elle
+// survit à un remontage (passage par la page 404, double effet du mode strict en développement), qui ne compte
+// donc pas une seconde vue de la même adresse.
+let lastCountedPath: string | null = null;
 
 function send(event: { kind: string; target?: string; path: string; source?: string; campaign?: string }) {
   const body = JSON.stringify(event); // les champs undefined ne partent pas
@@ -28,11 +30,13 @@ export function ClickTracker() {
   // Le gabarit reste monté d'une page à l'autre : une vue par changement d'adresse, pas une seule à l'arrivée.
   const pathname = usePathname();
   useEffect(() => {
-    if (landingCounted) {
+    if (lastCountedPath === pathname) return;
+    const landing = lastCountedPath === null;
+    lastCountedPath = pathname;
+    if (!landing) {
       send({ kind: "page_view", path: pathname });
       return;
     }
-    landingCounted = true;
     // Après une navigation interne, document.referrer reste celui de l'arrivée : seule la première vue le lit.
     const { source, campaign } = visitSource(window.location.search, document.referrer, window.location.host);
     send({ kind: "page_view", path: pathname, source: source ?? undefined, campaign: campaign ?? undefined });
