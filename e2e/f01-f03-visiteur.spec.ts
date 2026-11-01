@@ -1,4 +1,4 @@
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, scrollPastFirstScreen, test } from "./support/test";
 
 // Parcours visiteur sur la page publique : F01 suivre sur un réseau, F02 contacter, F03 soutenir (dons fermés).
 
@@ -95,6 +95,7 @@ test.describe("F02 une marque contacte le créateur", () => {
 test.describe("F03 un fan veut faire un don (dons fermés)", () => {
   test("F03-H1 le bouton épinglé ouvre la modale « bientôt », Échap la ferme et rend le focus", async ({ page }) => {
     await page.goto("/");
+    await scrollPastFirstScreen(page);
     const trigger = page.getByRole("button", { name: /^Me soutenir/ });
     await trigger.click();
     const dialog = page.getByRole("dialog");

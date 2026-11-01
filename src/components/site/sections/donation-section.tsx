@@ -10,7 +10,7 @@ export function DonationSection({ donation }: { donation: Donation }) {
   return (
     <section id="soutenir" aria-labelledby="soutenir-titre" className="section-y">
       <div className="container-site">
-        <div className="on-accent grid gap-6 rounded-lg bg-accent p-6 lg:grid-cols-2 lg:items-center lg:gap-12 lg:p-[58px]">
+        <div className="on-accent grid gap-6 rounded-lg bg-accent p-5 sm:p-6 lg:grid-cols-2 lg:items-center lg:gap-12 lg:p-[58px]">
           <div>
             <Kicker className="text-highlight">{texts.kicker}</Kicker>
             <div className="mt-4">
@@ -18,15 +18,15 @@ export function DonationSection({ donation }: { donation: Donation }) {
             </div>
             <p className="mt-4 max-w-prose text-base text-on-accent">{texts.text}</p>
           </div>
-          <div className="rounded-md bg-surface p-7 text-ink">
+          <div className="rounded-md bg-surface p-5 text-ink sm:p-7">
             <h3 className="text-label">
               <span className="block">{texts.cardTitle[0]}</span>
               <span className="block">{texts.cardTitle[1]}</span>
             </h3>
-            <p className="mb-6 mt-2 text-xs text-muted">{texts.cardText}</p>
+            <p className="mb-6 mt-2 text-sm text-muted">{texts.cardText}</p>
             <SupportButton donation={donation} variant="section" />
-            <p className="mt-4 text-center text-xs text-muted">{texts.thanks}</p>
-            {texts.feeNote && <p className="mt-2 text-center text-xs text-muted">{texts.feeNote}</p>}
+            <p className="mt-4 text-sm text-muted sm:text-center">{texts.thanks}</p>
+            {texts.feeNote && <p className="mt-2 text-sm text-muted sm:text-center">{texts.feeNote}</p>}
           </div>
         </div>
       </div>

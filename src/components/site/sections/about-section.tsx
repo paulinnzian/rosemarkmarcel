@@ -24,7 +24,7 @@ export function AboutSection({ about }: { about: SiteContent["about"] }) {
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-          <div className="mt-4 flex flex-wrap items-center gap-x-6">
+          <div className="mt-4 flex flex-col items-start sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-6">
             <CtaLink cta={about.cta} variant="text" track="a-propos" />
             {/* Vers la page À propos ; le nom accessible précise la destination parmi les « En savoir plus » de l'accueil. */}
             <Link href="/a-propos" className={buttonClasses("text")} data-track="cta" data-track-target="a-propos-plus">

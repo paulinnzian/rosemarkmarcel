@@ -4,11 +4,12 @@ vi.mock("server-only", () => ({}));
 
 const { getLatestEpisodes, parseFeed } = await import("./youtube");
 
-const entry = (id: string, title: string, published = "2026-07-31T12:00:00+00:00", description?: string) => `
+const entry = (id: string, title: string, published = "2026-07-31T12:00:00+00:00", description?: string, short = false) => `
   <entry>
     <id>yt:video:${id}</id>
     <yt:videoId>${id}</yt:videoId>
     <title>${title}</title>
+    <link rel="alternate" href="https://www.youtube.com/${short ? `shorts/${id}` : `watch?v=${id}`}"/>
     <published>${published}</published>
     <media:group><media:title>${title}</media:title>${description === undefined ? "" : `<media:description>${description}</media:description>`}</media:group>
   </entry>`;
@@ -22,9 +23,16 @@ describe("parseFeed", () => {
         id: "PCVTcl2fSAU",
         title: "le repos 14",
         publishedAt: "2026-07-31T12:00:00+00:00",
-        thumbnail: "https://i.ytimg.com/vi/PCVTcl2fSAU/hqdefault.jpg",
+        thumbnail: "https://i.ytimg.com/vi/PCVTcl2fSAU/hq720.jpg",
+        vertical: false,
       },
     ]);
+  });
+
+  it("reconnaît un Short à son adresse /shorts/ : vidéo verticale, miniature verticale", () => {
+    const [short, video] = parseFeed(feed(entry("PCVTcl2fSAU", "le repos 14", undefined, undefined, true), entry("-QL6fERvP-k", "Le Repos, l’épisode long")));
+    expect(short).toMatchObject({ vertical: true, thumbnail: "https://i.ytimg.com/vi/PCVTcl2fSAU/oar2.jpg" });
+    expect(video).toMatchObject({ vertical: false, thumbnail: "https://i.ytimg.com/vi/-QL6fERvP-k/hq720.jpg" });
   });
 
   it("décode les entités XML du titre, sans prendre le titre de la chaîne", () => {

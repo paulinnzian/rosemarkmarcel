@@ -81,8 +81,8 @@ export default function ConfidentialitePage() {
           </h2>
           <p className="mt-2">
             Écrivez directement à Marcel par l’un des moyens de la{" "}
-            <Link href="/#contact" className="font-bold underline decoration-accent decoration-2 underline-offset-4">
-              section Contact
+            <Link href="/contact" className="font-bold underline decoration-accent decoration-2 underline-offset-4">
+              page Contact
             </Link>
             .
           </p>

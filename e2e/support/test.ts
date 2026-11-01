@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { test as base, expect, type Page } from "@playwright/test";
+import { test as base, expect, type Locator, type Page } from "@playwright/test";
 
 /**
  * `page` surveillé : un test échoue sur toute erreur console, exception de page ou réponse 5xx,
@@ -35,4 +35,34 @@ export async function expectAccessible(page: Page) {
 export async function expectNoHorizontalScroll(page: Page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow, "débordement horizontal en px").toBeLessThanOrEqual(0);
+}
+
+/**
+ * Navigation principale prête à l'emploi : sur petit écran, ouvre d'abord le menu replié derrière le bouton « Menu ».
+ * Sur ordinateur, les rubriques sont déjà en ligne.
+ */
+export async function mainNav(page: Page) {
+  const nav = page.getByRole("navigation", { name: "Navigation principale" });
+  const toggle = nav.getByRole("button", { name: "Menu" });
+  if (await toggle.isVisible()) await openMenu(toggle);
+  return nav;
+}
+
+/**
+ * Ouvre le menu mobile. Un appui avant que React ait pris la main sur la page est perdu (le bouton n'a pas encore
+ * de gestionnaire) : l'appui est répété jusqu'à ce que le bouton annonce le menu ouvert.
+ */
+export async function openMenu(toggle: Locator) {
+  await expect(async () => {
+    if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true", { timeout: 1000 });
+  }).toPass();
+}
+
+/**
+ * Fait défiler la page sous le premier écran : sur petit écran, le bouton de soutien épinglé n'apparaît qu'après
+ * les premiers pixels de défilement (reveal-after-scroll). Défilement instantané, sans l'effet doux du site.
+ */
+export async function scrollPastFirstScreen(page: Page) {
+  await page.evaluate(() => window.scrollTo({ top: 600, behavior: "instant" }));
 }

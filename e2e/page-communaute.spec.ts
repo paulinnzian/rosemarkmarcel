@@ -1,4 +1,4 @@
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, mainNav, test } from "./support/test";
 
 // Page /communaute : l'audience totale et où suivre Marcel, puis comment soutenir (s'abonner, partager, donner).
 
@@ -11,9 +11,9 @@ test.describe("Page La communauté", () => {
     await expect(page).toHaveTitle(/^La communauté/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("nous rassemble.");
-    const nav = page.getByRole("navigation", { name: "Navigation principale" });
+    const nav = await mainNav(page);
     await expect(nav.getByRole("link", { name: "La communauté", exact: true })).toHaveAttribute("aria-current", "page");
-    await expect(nav.locator('[aria-current="page"]')).toHaveCount(1);
+    await expect(nav.locator('[aria-current="page"]:visible')).toHaveCount(1);
   });
 
   test("COM-H2 l'audience totale est affichée en tête de page", async ({ page }) => {

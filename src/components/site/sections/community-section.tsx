@@ -44,7 +44,7 @@ export function CommunitySection({ community, socials }: CommunitySectionProps) 
         )}
 
         {counted.length > 0 && (
-          <p className="mt-4 text-xs text-muted">
+          <p className="mt-4 text-sm text-muted">
             {community.countersSourceLabel}
             {lastUpdate && ` · mis à jour le ${formatUpdateDate(lastUpdate)}`}
           </p>

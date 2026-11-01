@@ -118,6 +118,7 @@ describe("episodeList", () => {
       title: "le repos 14",
       publishedAt: "2026-07-31T12:00:00+00:00",
       thumbnail: "https://i.ytimg.com/vi/PCVTcl2fSAU/hqdefault.jpg",
+      vertical: false,
       description: "Un peu de rire.",
     },
     {
@@ -125,6 +126,7 @@ describe("episodeList", () => {
       title: "le repos 13",
       publishedAt: "2026-07-24T12:00:00+00:00",
       thumbnail: "https://i.ytimg.com/vi/yHXyB-Yb4z4/hqdefault.jpg",
+      vertical: false,
     },
   ];
 

@@ -113,6 +113,27 @@
   --shadow-card-hover: 0 10px 30px rgba(23, 23, 68, 0.1);
 
   --ease-brand: var(--ease);
+
+  /* Colonne de lecture (max-w-prose) : 65ch d'Inter Tight laisse passer 80 à 95 signes par ligne ; 34rem en
+     garde 65 à 75 à 16-17 px. */
+  --max-width-prose: 34rem;
+
+  /* Ouverture du menu mobile : le panneau descend de quelques pixels en apparaissant. */
+  --animate-menu-in: menu-in var(--dur-base) var(--ease);
+  --animate-fade-in: fade-in var(--dur-base) var(--ease);
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
 }
 
 /* Mise en page commune */
@@ -156,6 +177,27 @@
 /* Menu « Plus » ouvert juste au-dessus de la barre d'onglets */
 @utility above-admin-tabbar {
   bottom: calc(var(--admin-tabbar) + env(safe-area-inset-bottom) + 0.5rem);
+}
+
+/* Bouton de soutien épinglé, petits écrans : il apparaît après 160 px de défilement, pour ne pas cacher le haut
+   des pages (titres, chiffres clés). Sans animation liée au défilement (navigateur ancien), avec mouvements réduits
+   ou sur une page trop courte pour défiler : toujours visible. */
+@utility reveal-after-scroll {
+  @media (width < 64rem) and (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      animation: reveal-after-scroll linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 160px;
+    }
+  }
+}
+
+@keyframes reveal-after-scroll {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    visibility: hidden;
+  }
 }
 
 /* Espace réservé sous le contenu pour le bouton de soutien épinglé (layout du site public) */

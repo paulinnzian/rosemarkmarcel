@@ -6,6 +6,8 @@ export type Episode = {
   /** Date ISO de publication. */
   publishedAt: string;
   thumbnail: string;
+  /** Vidéo verticale (Short) : miniature et lecteur au format 9:16. */
+  vertical: boolean;
   /** Texte de la vidéo sur YouTube (media:description), absent s'il est vide. */
   description?: string;
 };
@@ -35,11 +37,15 @@ export function parseFeed(xml: string): Episode[] {
     const publishedAt = tag(entry, "published");
     if (!id || !/^[\w-]{11}$/.test(id) || !title || !publishedAt) continue;
     const description = decode(tag(entry, "media:description") ?? "").trim();
+    // Le flux donne aux Shorts une adresse /shorts/ ; leur miniature verticale (oar2, 1080×1920) n'existe que pour eux.
+    // Les autres : hq720 (1280×720, sans les bandes noires de hqdefault) ; le lecteur retombe sur hqdefault au besoin.
+    const vertical = /<link rel="alternate" href="https:\/\/www\.youtube\.com\/shorts\//.test(entry);
     episodes.push({
       id,
       title: decode(title).trim(),
       publishedAt,
-      thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+      thumbnail: `https://i.ytimg.com/vi/${id}/${vertical ? "oar2" : "hq720"}.jpg`,
+      vertical,
       ...(description && { description }),
     });
   }

@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, mainNav, test } from "./support/test";
 
 // Page Mon univers : un fan regarde un épisode du Repos sans quitter le site. Le flux YouTube est le vrai :
 // une liste vide est acceptée (message et lien vers la chaîne). La lecture n'est jamais lancée : le lecteur
@@ -20,7 +20,7 @@ test.describe("Page Mon univers", () => {
     expect(response?.status()).toBe(200);
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Mon univers" })).toHaveAttribute(
+    await expect((await mainNav(page)).getByRole("link", { name: "Mon univers" })).toHaveAttribute(
       "aria-current",
       "page",
     );

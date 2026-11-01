@@ -5,6 +5,7 @@ import { unstable_cache } from "next/cache";
 import { seedContent } from "@/content";
 import { mergePages } from "@/content/pages";
 import { siteContentSchema, type SiteContent } from "@/content/schema";
+import { withFrenchSpacing } from "@/lib/format";
 import { networkName } from "@/lib/networks";
 import { isSupabaseConfigured, publicMediaUrl } from "@/lib/supabase/env";
 import { createPublicClient } from "@/lib/supabase/public-client";
@@ -36,16 +37,17 @@ const readCachedContent = unstable_cache(readContentFromDatabase, ["site-content
  * Sans Supabase configuré, ou si la base ne répond pas, les valeurs initiales de content.ts sont servies
  * sans mettre le repli en cache, afin de reprendre la base dès qu'elle revient.
  */
+// Ponctuation française liée au mot voisin (format.ts) : appliquée à la lecture, donc aussi aux textes de l'admin.
 export async function getSiteContent(): Promise<SiteContent> {
   if (!isSupabaseConfigured()) {
-    return seedContent;
+    return withFrenchSpacing(seedContent);
   }
 
   try {
-    return await readCachedContent();
+    return withFrenchSpacing(await readCachedContent());
   } catch (error) {
     console.error("Contenu illisible dans Supabase, valeurs initiales servies :", error);
-    return seedContent;
+    return withFrenchSpacing(seedContent);
   }
 }
 

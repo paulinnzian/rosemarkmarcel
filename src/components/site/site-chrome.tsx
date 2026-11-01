@@ -19,7 +19,8 @@ export async function SiteChrome({ children }: { children: React.ReactNode }) {
       >
         Aller au contenu
       </a>
-      <div className="pb-floating">
+      {/* Au moins la hauteur de l'écran : sur une page courte (404), le pied de page reste en bas. */}
+      <div className="flex min-h-dvh flex-col pb-floating [&>footer]:mt-auto">
         <SiteHeader creatorName={creatorName} tagline={tagline} nav={nav} />
         {children}
         <SiteFooter creatorName={creatorName} footerLine={footerLine} />

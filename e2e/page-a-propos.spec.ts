@@ -1,4 +1,4 @@
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, mainNav, test } from "./support/test";
 
 // Page À propos : un fan curieux découvre qui est Marcel, puis rejoint la communauté.
 
@@ -15,7 +15,7 @@ test.describe("Page À propos", () => {
 
   test("le lien « À propos » du menu signale la page active", async ({ page }) => {
     await page.goto("/a-propos");
-    await expect(page.getByRole("navigation").getByRole("link", { name: "À propos" })).toHaveAttribute("aria-current", "page");
+    await expect((await mainNav(page)).getByRole("link", { name: "À propos" })).toHaveAttribute("aria-current", "page");
   });
 
   test("le bouton de conclusion mène à la communauté", async ({ page }) => {

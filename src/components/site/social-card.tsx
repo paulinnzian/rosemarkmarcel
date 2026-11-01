@@ -24,12 +24,12 @@ export function SocialCard({ link }: { link: SocialLink }) {
         {hasCount ? (
           <>
             <span className="block text-count">{formatFollowers(link.followers ?? 0)}</span>
-            <span className="mt-1 block text-xs text-muted">abonnés · {link.actionLabel}</span>
+            <span className="mt-1 block text-sm text-muted">abonnés · {link.actionLabel}</span>
           </>
         ) : (
           <>
             <span className="block text-[24px] font-bold leading-tight tracking-[-0.03em] lg:text-[28px]">{link.fallbackLabel}</span>
-            <span className="mt-1 block text-xs text-muted">{link.fallbackSublabel ?? link.actionLabel}</span>
+            <span className="mt-1 block text-sm text-muted">{link.fallbackSublabel ?? link.actionLabel}</span>
           </>
         )}
       </span>

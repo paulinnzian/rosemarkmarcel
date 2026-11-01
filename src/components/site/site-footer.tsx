@@ -5,7 +5,7 @@ export async function SiteFooter({ creatorName, footerLine }: { creatorName: str
 
   return (
     <footer className="border-t border-line">
-      <div className="container-site flex flex-col gap-2 py-[35px] text-xs text-muted lg:flex-row lg:items-center lg:justify-between">
+      <div className="container-site flex flex-col gap-2 py-[35px] text-sm text-muted lg:flex-row lg:items-center lg:justify-between">
         <p className="font-bold uppercase text-ink">{creatorName}.</p>
         <p>{footerLine}</p>
         <p className="flex flex-wrap items-center gap-x-4">

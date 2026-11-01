@@ -28,3 +28,42 @@ export function whatsappHref(e164: string, message?: string): string {
   const base = `https://wa.me/${e164.replace(/^\+/, "")}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
 }
+
+/**
+ * Ponctuation française : une espace insécable avant « ! ? ; : » et « » », et après « « », pour qu'un signe ne
+ * parte jamais seul en début de ligne. Les textes saisis dans l'admin gardent leurs espaces ordinaires : la
+ * correction se fait à l'affichage.
+ */
+export function frenchSpacing(text: string): string {
+  return text.replace(/ ([!?;:»])/g, `${NBSP}$1`).replace(/« /g, `«${NBSP}`);
+}
+
+/**
+ * Champs jamais retouchés : adresses, numéros, identifiants, valeurs d'énumération, dates, et les messages déjà
+ * écrits pour WhatsApp, envoyés tels que saisis.
+ */
+const RAW_KEYS = new Set([
+  "href",
+  "url",
+  "src",
+  "paymentUrl",
+  "value",
+  "handle",
+  "network",
+  "type",
+  "youtubeChannelId",
+  "updatedAt",
+  "prefilledMessage",
+  "whatsappMessage",
+]);
+
+/** frenchSpacing appliqué à tous les textes d'un objet de contenu (objets et tableaux imbriqués), sauf RAW_KEYS. */
+export function withFrenchSpacing<T>(value: T, key?: string): T {
+  // Même forme en sortie qu'en entrée : seules les chaînes changent, d'où les conversions vers T.
+  if (typeof value === "string") return (key !== undefined && RAW_KEYS.has(key) ? value : frenchSpacing(value)) as T;
+  if (Array.isArray(value)) return value.map((item) => withFrenchSpacing(item, key)) as T;
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([field, item]) => [field, withFrenchSpacing(item, field)])) as T;
+  }
+  return value;
+}

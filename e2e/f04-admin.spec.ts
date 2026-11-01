@@ -3,7 +3,7 @@ import { devices, type Page } from "@playwright/test";
 import { EDITOR, NOT_ADMIN, OWNER, OWNER_STATE, serviceClient } from "./support/env";
 import { codeIn, mailCount, nextMail, requestCode, signIn } from "./support/login";
 import { solidPng } from "./support/png";
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, scrollPastFirstScreen, test } from "./support/test";
 
 // F04 : Marcel met à jour son site depuis son téléphone. Chaque test remet ce qu'il change, la base est
 // de toute façon remise à zéro par global-setup au lancement suivant.
@@ -141,6 +141,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await saved(page, "Enregistré. Les boutons de soutien ouvrent maintenant votre lien de paiement.");
 
     await page.goto("/");
+    await scrollPastFirstScreen(page);
     await expect(page.getByRole("link", { name: /Me soutenir/ })).toHaveAttribute("href", "https://paiement.exemple.test/marcel");
 
     // Vérifié après l'enregistrement (after()) : le nom .test ne se résout jamais, le lien est signalé sur le tableau de bord.
@@ -157,6 +158,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await page.getByRole("button", { name: "Enregistrer" }).click();
     await saved(page, /Les dons sont fermés/);
     await page.goto("/");
+    await scrollPastFirstScreen(page);
     await expect(page.getByRole("button", { name: /^Me soutenir/ })).toBeVisible();
   });
 

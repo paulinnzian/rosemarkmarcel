@@ -1,6 +1,6 @@
 import { seedContent } from "../src/content";
 
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, mainNav, test } from "./support/test";
 
 // Page /contact : un fan, un média ou une marque trouve d'abord comment joindre Marcel, WhatsApp en tête.
 
@@ -18,7 +18,7 @@ test.describe("page Contact", () => {
 
   test("le menu signale la page Contact comme page courante", async ({ page }) => {
     await page.goto("/contact");
-    const link = page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Contact", exact: true });
+    const link = (await mainNav(page)).getByRole("link", { name: "Contact", exact: true });
     await expect(link).toHaveAttribute("href", "/contact");
     await expect(link).toHaveAttribute("aria-current", "page");
   });

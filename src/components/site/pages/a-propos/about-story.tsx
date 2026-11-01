@@ -5,7 +5,7 @@ export function AboutStory({ story }: { story: string[] }) {
   return (
     <div className="container-site pb-(--section-y)">
       <div className="max-w-prose space-y-5">
-        <p className="text-lead font-bold text-ink">{first}</p>
+        <p className="text-lead font-semibold text-ink">{first}</p>
         {rest.map((paragraph, index) => (
           <p key={index} className="text-lead text-muted">
             {paragraph}

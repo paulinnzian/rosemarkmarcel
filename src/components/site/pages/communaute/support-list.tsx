@@ -21,7 +21,7 @@ export function SupportList({ texts, donation, shareTitle, networksId }: Support
       key: "suivre",
       block: follow,
       action: networksId ? (
-        <a href={`#${networksId}`} className={buttonClasses("text")}>
+        <a href={`#${networksId}`} className={buttonClasses("text", "justify-self-start")}>
           <span aria-hidden="true">↑</span> Voir mes réseaux
         </a>
       ) : null,

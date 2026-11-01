@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { OWNER_STATE } from "./support/env";
-import { expect, expectAccessible, expectNoHorizontalScroll, test } from "./support/test";
+import { expect, expectAccessible, expectNoHorizontalScroll, mainNav, test } from "./support/test";
 
 // Page /collaborations : une marque voit l'audience par réseau et écrit sur WhatsApp.
 
@@ -17,7 +17,7 @@ test.describe("page Collaborations", () => {
 
   test("le menu signale la page Collaborations comme page courante", async ({ page }) => {
     await page.goto("/collaborations");
-    const link = page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "Collaborations" });
+    const link = (await mainNav(page)).getByRole("link", { name: "Collaborations" });
     await expect(link).toHaveAttribute("aria-current", "page");
   });
 

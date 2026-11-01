@@ -36,6 +36,11 @@ function ChannelLink({ href, variant, label }: { href: string; variant: "accent"
   );
 }
 
+/** Titre tel que publié sur YouTube, avec sa première lettre en capitale (« le repos 14 » -> « Le repos 14 »). */
+function capitalize(title: string): string {
+  return title.charAt(0).toLocaleUpperCase("fr-FR") + title.slice(1);
+}
+
 /** Les derniers épisodes du Repos : le plus récent en grand, les autres en grille, lecture sur place. */
 export function EpisodesSection({ universe, episodes, channelHref }: EpisodesSectionProps) {
   const [latest, ...others] = episodes;
@@ -51,10 +56,16 @@ export function EpisodesSection({ universe, episodes, channelHref }: EpisodesSec
 
       {latest ? (
         <>
-          <article className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-end lg:gap-10">
-            <EpisodePlayer id={latest.id} title={latest.title} thumbnail={latest.thumbnail} sizes="(min-width: 1024px) 860px, 92vw" />
-            <div className="lg:pb-2">
-              <h3 className="line-clamp-4 break-words text-count text-ink">{latest.title}</h3>
+          <article className="mt-10 grid gap-5 sm:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] sm:items-end sm:gap-8 lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:gap-12">
+            <EpisodePlayer
+              id={latest.id}
+              title={latest.title}
+              thumbnail={latest.thumbnail}
+              vertical={latest.vertical}
+              sizes="(min-width: 1024px) 384px, (min-width: 640px) 320px, 92vw"
+            />
+            <div className="sm:pb-2">
+              <h3 className="line-clamp-4 break-words text-count text-ink">{capitalize(latest.title)}</h3>
               <p className="mt-3">
                 <EpisodeDate publishedAt={latest.publishedAt} />
               </p>
@@ -62,7 +73,8 @@ export function EpisodesSection({ universe, episodes, channelHref }: EpisodesSec
           </article>
 
           {others.length > 0 && (
-            <ul className="mt-14 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            // Deux colonnes dès le téléphone : six épisodes en trois rangées plutôt qu'une longue colonne.
+            <ul className="mt-12 grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-4">
               {others.map((episode) => (
                 <li key={episode.id}>
                   <article>
@@ -70,9 +82,10 @@ export function EpisodesSection({ universe, episodes, channelHref }: EpisodesSec
                       id={episode.id}
                       title={episode.title}
                       thumbnail={episode.thumbnail}
-                      sizes="(min-width: 1024px) 420px, (min-width: 640px) 46vw, 92vw"
+                      vertical={episode.vertical}
+                      sizes="(min-width: 1024px) 300px, (min-width: 640px) 30vw, 46vw"
                     />
-                    <h3 className="mt-4 line-clamp-2 break-words text-label text-ink">{episode.title}</h3>
+                    <h3 className="mt-3 line-clamp-2 break-words text-base font-bold text-ink sm:mt-4 sm:text-label">{capitalize(episode.title)}</h3>
                     <p className="mt-1">
                       <EpisodeDate publishedAt={episode.publishedAt} />
                     </p>

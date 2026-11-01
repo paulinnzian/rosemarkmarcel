@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 import { OWNER_STATE, serviceClient } from "./support/env";
-import { expect, expectAccessible, test } from "./support/test";
+import { expect, expectAccessible, mainNav, test } from "./support/test";
 
 // Provenance des visites (référencement, réseaux, campagnes) sans traqueur tiers : la vue de la page d'arrivée
 // porte un nom court de source et la campagne du lien, jamais l'adresse de la page d'origine.
@@ -38,7 +38,7 @@ test.describe("Provenance des visites (visiteur)", () => {
       campaign: "lancement",
     });
 
-    await page.getByRole("navigation", { name: "Navigation principale" }).getByRole("link", { name: "À propos" }).click();
+    await (await mainNav(page)).getByRole("link", { name: "À propos" }).click();
     await expect(page).toHaveURL(/\/a-propos$/);
     await expect.poll(() => views.length).toBe(2);
     expect(views[1]).toEqual({ kind: "page_view", path: "/a-propos" });

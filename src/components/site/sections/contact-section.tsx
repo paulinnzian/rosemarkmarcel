@@ -52,7 +52,7 @@ export function ContactSection({ contact, contacts }: ContactSectionProps) {
               {email.display}
             </a>
           )}
-          <p className="text-xs text-muted">{contact.note}</p>
+          <p className="text-sm text-muted">{contact.note}</p>
         </div>
       </div>
     </section>

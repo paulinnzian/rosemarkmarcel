@@ -31,7 +31,7 @@ export function AudienceTable({ heading, note, socials }: AudienceTableProps) {
           <h2 id="audience-titre" className="text-h2 text-balance">
             {heading}
           </h2>
-          <p className="mt-4 max-w-prose text-xs text-muted">
+          <p className="mt-4 max-w-prose text-sm text-muted">
             {note}
             {lastUpdate && (
               <>
