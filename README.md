@@ -29,9 +29,9 @@ pnpm dev                     # http://localhost:3000
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY` et `SUPABASE_SERVICE_ROLE_KEY` : Supabase > Project Settings > API Keys
    - `NEXT_PUBLIC_SITE_URL` = `https://<domaine>` (sans barre finale)
    - `CRON_SECRET` = une longue valeur aléatoire (`openssl rand -hex 32`)
-3. **Domaine** : `NEXT_PUBLIC_SITE_URL` donne l'adresse canonique. Hostinger fait tourner `www.<domaine>` et
-   `<domaine>` dans deux processus séparés, chacun avec son cache ; `src/proxy.ts` redirige l'autre (308) vers
-   l'adresse canonique pour qu'une modification faite dans l'admin soit visible partout.
+3. **Domaine** : `NEXT_PUBLIC_SITE_URL` donne l'adresse canonique. Cloudflare est autoritatif pour le DNS et sa règle
+   de redirection `Canonicaliser www vers apex` renvoie `www.<domaine>` vers `<domaine>` en 308, en conservant le
+   chemin, la query string et la méthode HTTP. La canonicalisation est faite à l'edge, avant l'application Hostinger.
 4. **Vérification quotidienne des liens** : hPanel > Avancé > Cron Jobs > Custom, `0 6 * * *` (UTC), commande
    `/bin/sh <chemin du site>/scripts/cron-verifier-liens.sh`. Hostinger refuse guillemets et redirections dans ce
    champ, d'où le script. Il lit ses réglages dans `~/.vitrine-cron` (à créer en SSH, puis `chmod 600`) :

@@ -33,23 +33,6 @@ export function sameOrigin(headers: HeaderSource): boolean {
   }
 }
 
-/**
- * Hôte canonique vers lequel rediriger, ou null. Seul le jumeau www / sans www est redirigé : chez Hostinger, chacun
- * tourne dans son propre processus avec son propre cache, et une modification faite dans l'admin (updateTag) ne
- * rafraîchirait que l'un des deux.
- */
-export function canonicalHost(host: string | null, siteUrl: string | undefined): string | null {
-  if (!host || !siteUrl) return null;
-  let canonical: string;
-  try {
-    canonical = new URL(siteUrl).host;
-  } catch {
-    return null;
-  }
-  const twin = canonical.startsWith("www.") ? canonical.slice(4) : `www.${canonical}`;
-  return host.toLowerCase() === twin ? canonical : null;
-}
-
 // Pays : en-tête posé par le réseau devant le serveur (Cloudflare, CloudFront, Vercel). Hébergé tel quel sur Hostinger
 // Node.js, aucun n'est présent et le pays reste vide. « XX » = pays inconnu chez Cloudflare.
 const COUNTRY_HEADERS = ["cf-ipcountry", "cloudfront-viewer-country", "x-vercel-ip-country"];

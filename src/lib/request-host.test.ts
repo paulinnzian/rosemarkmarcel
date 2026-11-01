@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { canonicalHost, countryOf, publicHost, publicUrl, sameOrigin } from "./request-host";
+import { countryOf, publicHost, publicUrl, sameOrigin } from "./request-host";
 
 const headers = (values: Record<string, string>) => new Headers(values);
 
@@ -32,20 +32,6 @@ describe("sameOrigin", () => {
   it("refuse une autre origine, « null » ou une valeur invalide", () => {
     expect(sameOrigin(headers({ host: "rosemark.exemple", origin: "https://ailleurs.exemple" }))).toBe(false);
     expect(sameOrigin(headers({ host: "rosemark.exemple", origin: "null" }))).toBe(false);
-  });
-});
-
-describe("canonicalHost", () => {
-  it("renvoie www vers le domaine nu, et l'inverse", () => {
-    expect(canonicalHost("www.rosemark.exemple", "https://rosemark.exemple")).toBe("rosemark.exemple");
-    expect(canonicalHost("WWW.Rosemark.exemple", "https://rosemark.exemple")).toBe("rosemark.exemple");
-    expect(canonicalHost("rosemark.exemple", "https://www.rosemark.exemple")).toBe("www.rosemark.exemple");
-  });
-  it("ne touche ni l'adresse canonique, ni un autre hôte, ni une configuration absente", () => {
-    expect(canonicalHost("rosemark.exemple", "https://rosemark.exemple")).toBeNull();
-    expect(canonicalHost("localhost:3100", "http://localhost:3000")).toBeNull();
-    expect(canonicalHost("www.rosemark.exemple", undefined)).toBeNull();
-    expect(canonicalHost("www.rosemark.exemple", "pas une adresse")).toBeNull();
   });
 });
 
