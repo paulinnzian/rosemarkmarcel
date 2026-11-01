@@ -312,16 +312,16 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await expect(page.getByRole("link", { name: /^Snapchat / })).toHaveCount(0);
   });
 
-  test("F04-H6 statistiques : événements valides comptés ; robots, admin connecté et envois douteux écartés", async ({ page, browser, playwright, request: adminRequest }) => {
+  test("F04-H6 statistiques : événements valides comptés ; robots, admin connecté et envois douteux écartés", async ({ page, browser, playwright, request: adminRequest, baseURL }) => {
     // Visiteur anonyme : sans les cookies de session du propriétaire (ceux-là sont ignorés, vérifié plus bas).
-    const request = await playwright.request.newContext({ baseURL: "http://localhost:3100", storageState: { cookies: [], origins: [] } });
+    const request = await playwright.request.newContext({ baseURL, storageState: { cookies: [], origins: [] } });
     await serviceClient().from("click_events").delete().gte("id", 0);
     await page.goto("/admin/statistiques");
     await expect(page.getByText(/^Pas encore de données/)).toBeVisible();
 
     // Un vrai navigateur, sans session : la vue et le clic sur le bouton du héros partent par sendBeacon.
     // Agent d'un Chrome de bureau ordinaire : « HeadlessChrome » est écarté comme robot.
-    const visitor = await browser.newContext({ baseURL: "http://localhost:3100", userAgent: devices["Desktop Chrome"].userAgent,
+    const visitor = await browser.newContext({ baseURL, userAgent: devices["Desktop Chrome"].userAgent,
       storageState: { cookies: [], origins: [] },
     });
     const visitorPage = await visitor.newPage();
@@ -368,7 +368,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await expectAccessible(page);
   });
 
-  test("F04-H9 sauvegarde et liens : fichier JSON pour l’admin seulement ; vérification à la demande et quotidienne", async ({ page, playwright }) => {
+  test("F04-H9 sauvegarde et liens : fichier JSON pour l’admin seulement ; vérification à la demande et quotidienne", async ({ page, playwright, baseURL }) => {
     await page.goto("/admin");
     const download = page.waitForEvent("download");
     await page.getByRole("link", { name: "Télécharger une sauvegarde" }).click();
@@ -383,7 +383,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     expect(body.donationSettings).toHaveProperty("payment_url");
     expect(JSON.stringify(body)).not.toMatch(/admin_users|click_events/);
 
-    const anonymous = await playwright.request.newContext({ baseURL: "http://localhost:3100", storageState: { cookies: [], origins: [] } });
+    const anonymous = await playwright.request.newContext({ baseURL, storageState: { cookies: [], origins: [] } });
     const refused = await anonymous.get("/admin/sauvegarde", { maxRedirects: 0 });
     expect(refused.status()).toBe(307);
     expect(refused.headers().location).toMatch(/\/admin\/connexion$/);
@@ -403,7 +403,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await expectAccessible(page);
   });
 
-  test("F04-H7 accès : le propriétaire ajoute un gestionnaire, qui ne gère pas les accès, puis le retire", async ({ page, browser }) => {
+  test("F04-H7 accès : le propriétaire ajoute un gestionnaire, qui ne gère pas les accès, puis le retire", async ({ page, browser, baseURL }) => {
     await page.goto("/admin/acces");
     await page.getByLabel("Adresse e-mail du gestionnaire").fill(EDITOR);
     await page.getByRole("button", { name: "Donner l’accès" }).click();
@@ -415,7 +415,7 @@ test.describe("F04 écrans de l’administration (propriétaire connecté)", () 
     await page.getByRole("button", { name: "Donner l’accès" }).click();
     await fieldError(page, "Cette adresse a déjà accès.");
 
-    const editorContext = await browser.newContext({ baseURL: "http://localhost:3100", viewport: { width: 390, height: 844 } });
+    const editorContext = await browser.newContext({ baseURL, viewport: { width: 390, height: 844 } });
     const editorPage = await editorContext.newPage();
     await signIn(editorPage, EDITOR);
     await editorPage.goto("/admin/acces");
