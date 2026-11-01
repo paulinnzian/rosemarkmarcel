@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { buttonClasses } from "@/components/site/button-styles";
 import { Decorated } from "@/components/site/decorated";
 import { Kicker } from "@/components/site/kicker";
@@ -23,6 +25,9 @@ export function ContactSection({ contact, contacts }: ContactSectionProps) {
             <SectionHeading as="h2" id="contact-titre" heading={contact.heading} className="text-ink" highlightClassName="text-ink" />
           </div>
           <p className="mt-6 max-w-prose text-base text-muted">{contact.intro}</p>
+          <Link href="/collaborations" data-track="cta" data-track-target="collaborations" className={buttonClasses("text", "mt-2")}>
+            Voir les collaborations
+          </Link>
         </div>
         <div className="flex flex-col items-start gap-3">
           {whatsapp?.type === "whatsapp" && (

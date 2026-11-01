@@ -23,6 +23,7 @@ const sections = {
   universe: c.universe,
   contact: c.contact,
   footerLine: c.footerLine,
+  pages: c.pages,
 };
 
 const socialRows = c.socials.map(

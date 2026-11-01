@@ -10,7 +10,8 @@ const nextConfig: NextConfig = {
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [75],
-    remotePatterns: mediaPattern,
+    // Miniatures des épisodes du Repos (page Mon univers).
+    remotePatterns: [...mediaPattern, new URL("https://i.ytimg.com/vi/**")],
     dangerouslyAllowLocalIP: localSupabase,
   },
   experimental: {

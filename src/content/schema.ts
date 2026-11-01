@@ -8,6 +8,8 @@ const text = z.string().trim().min(1, "Ce champ ne peut pas être vide.");
 export const httpsUrl = z.url({ protocol: /^https$/, error: "Le lien doit commencer par https://" });
 const paragraphs = z.array(text).min(1, "Écrivez au moins un paragraphe.");
 const anchor = z.string().regex(/^#[a-z-]+$/);
+// Page du site : « / », « /a-propos »…, éventuellement suivie d'une ancre.
+const route = z.string().regex(/^\/[a-z-]*(#[a-z-]+)?$/);
 const e164 = z.string().regex(/^\+[1-9][0-9]{7,14}$/, "Numéro au format international : +225…");
 
 export const headingSchema = z
@@ -21,7 +23,7 @@ export const headingSchema = z
     path: ["highlightFrom"],
   });
 
-const ctaSchema = z.object({ label: text, href: z.union([anchor, httpsUrl]) });
+const ctaSchema = z.object({ label: text, href: z.union([anchor, route, httpsUrl]) });
 
 export const networkSchema = z.enum(["facebook", "instagram", "tiktok", "youtube", "snapchat", "x", "whatsapp_channel"]);
 
@@ -63,12 +65,66 @@ export const donationSchema = z
     path: ["paymentUrl"],
   });
 
+// Un bloc de texte titré : une valeur, une façon de soutenir, un format de collaboration, une étape.
+const blockSchema = z.object({ title: text, text });
+
+// Pages À propos, Mon univers, La communauté et Collaborations. Lues page par page avec repli sur content.ts :
+// une base qui n'a pas encore une page (ou un champ ajouté plus tard) reste valide.
+export const pagesSchema = z.object({
+  about: z.object({
+    kicker: text,
+    heading: headingSchema,
+    intro: text,
+    story: paragraphs,
+    valuesHeading: text,
+    values: z.array(blockSchema).min(1).max(4),
+    closing: text,
+    closingCta: ctaSchema,
+  }),
+  universe: z.object({
+    kicker: text,
+    heading: headingSchema,
+    intro: text,
+    conceptHeading: text,
+    concept: paragraphs,
+    episodesHeading: text,
+    episodesIntro: text,
+    episodesEmpty: text,
+    youtubeChannelId: z.string().regex(/^UC[\w-]{22}$/, "Identifiant de chaîne YouTube : UC suivi de 22 caractères."),
+  }),
+  community: z.object({
+    kicker: text,
+    heading: headingSchema,
+    intro: text,
+    totalLabel: text,
+    supportHeading: text,
+    // Un bloc par geste, nommé : chaque bloc porte son bouton (réseaux, partage, don).
+    support: z.object({ follow: blockSchema, share: blockSchema, donate: blockSchema }),
+    shareLabel: text,
+    shareText: text,
+  }),
+  collaborations: z.object({
+    kicker: text,
+    heading: headingSchema,
+    intro: text,
+    audienceHeading: text,
+    audienceNote: text,
+    formatsHeading: text,
+    formats: z.array(blockSchema).min(1).max(6),
+    stepsHeading: text,
+    steps: z.array(blockSchema).min(2).max(5),
+    ctaHeading: text,
+    ctaText: text,
+    whatsappMessage: text.max(500),
+  }),
+});
+
 export const siteContentSchema = z.object({
   creatorName: text,
   tagline: text,
   roleLine: text,
   conceptName: text,
-  nav: z.array(z.object({ label: text, href: anchor })).max(6),
+  nav: z.array(z.object({ label: text, href: z.union([anchor, route]) })).max(6),
   hero: z.object({ heading: headingSchema, intro: text, primaryCta: ctaSchema }),
   photo: z.object({ src: text, alt: text, width: z.number().int().positive(), height: z.number().int().positive() }),
   photoLabel: z.object({ kicker: text, text }),
@@ -78,6 +134,7 @@ export const siteContentSchema = z.object({
   universe: z.object({ kicker: text, heading: headingSchema, cardText: z.tuple([text, text]), paragraphs: paragraphs, cta: ctaSchema }),
   contact: z.object({ kicker: text, heading: headingSchema, intro: text, note: text }),
   footerLine: text,
+  pages: pagesSchema,
   socials: z.array(socialLinkSchema),
   contacts: z.array(contactChannelSchema),
   donation: donationSchema,
@@ -88,3 +145,4 @@ export type SocialLink = z.infer<typeof socialLinkSchema>;
 export type ContactChannel = z.infer<typeof contactChannelSchema>;
 export type Donation = z.infer<typeof donationSchema>;
 export type SiteContent = z.infer<typeof siteContentSchema>;
+export type Pages = z.infer<typeof pagesSchema>;

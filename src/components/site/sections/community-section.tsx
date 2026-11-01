@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { buttonClasses } from "@/components/site/button-styles";
 import { Kicker } from "@/components/site/kicker";
 import { SectionHeading } from "@/components/site/section-heading";
 import { SocialCard } from "@/components/site/social-card";
@@ -46,6 +49,11 @@ export function CommunitySection({ community, socials }: CommunitySectionProps) 
             {lastUpdate && ` · mis à jour le ${formatUpdateDate(lastUpdate)}`}
           </p>
         )}
+
+        <Link href="/communaute" className={buttonClasses("text", "mt-6")}>
+          En savoir plus<span className="sr-only"> sur la communauté</span>
+          <span aria-hidden="true">→</span>
+        </Link>
       </div>
     </section>
   );

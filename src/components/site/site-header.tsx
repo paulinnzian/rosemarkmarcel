@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { NavLink } from "@/components/site/nav-link";
 import type { SiteContent } from "@/content/schema";
 
 type SiteHeaderProps = Pick<SiteContent, "creatorName" | "tagline" | "nav">;
@@ -21,12 +22,7 @@ export function SiteHeader({ creatorName, tagline, nav }: SiteHeaderProps) {
           <ul className="flex gap-x-[18px] whitespace-nowrap px-1 lg:gap-x-8">
             {nav.map((item) => (
               <li key={item.href}>
-                <Link
-                  href={`/${item.href}`}
-                  className="inline-flex min-h-11 items-center text-[13px] text-ink decoration-accent decoration-2 underline-offset-4 hover:underline"
-                >
-                  {item.label}
-                </Link>
+                <NavLink href={item.href} label={item.label} />
               </li>
             ))}
           </ul>

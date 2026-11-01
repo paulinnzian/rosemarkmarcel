@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { buttonClasses } from "@/components/site/button-styles";
 import { CtaLink } from "@/components/site/cta-link";
 import { Kicker } from "@/components/site/kicker";
 import { SectionHeading } from "@/components/site/section-heading";
@@ -21,8 +24,12 @@ export function AboutSection({ about }: { about: SiteContent["about"] }) {
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap items-center gap-x-6">
             <CtaLink cta={about.cta} variant="text" track="a-propos" />
+            {/* Vers la page À propos ; le nom accessible précise la destination parmi les « En savoir plus » de l'accueil. */}
+            <Link href="/a-propos" className={buttonClasses("text")} data-track="cta" data-track-target="a-propos-plus">
+              En savoir plus<span className="sr-only"> : {about.kicker}</span>
+            </Link>
           </div>
         </div>
       </div>

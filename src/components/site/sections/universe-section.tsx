@@ -1,3 +1,6 @@
+import Link from "next/link";
+
+import { buttonClasses } from "@/components/site/button-styles";
 import { ConceptCard } from "@/components/site/concept-card";
 import { CtaLink } from "@/components/site/cta-link";
 import { Kicker } from "@/components/site/kicker";
@@ -20,8 +23,11 @@ export function UniverseSection({ universe }: { universe: SiteContent["universe"
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap gap-x-6">
             <CtaLink cta={universe.cta} variant="text" track="univers" />
+            <Link href="/univers" className={buttonClasses("text")} data-track="cta" data-track-target="univers-page">
+              Voir les épisodes
+            </Link>
           </div>
         </div>
       </div>

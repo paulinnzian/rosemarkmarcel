@@ -83,7 +83,81 @@ export const CONTENT_GROUPS: ContentGroup[] = [
       { kind: "paragraph", path: "contact.note", label: "Note sous les contacts" },
     ],
   },
+  {
+    id: "page-a-propos",
+    title: "Page À propos",
+    fields: [
+      { kind: "text", path: "pages.about.kicker", label: "Petit titre" },
+      { kind: "heading", path: "pages.about.heading", label: "Titre" },
+      { kind: "paragraph", path: "pages.about.intro", label: "Introduction" },
+      { kind: "paragraphs", path: "pages.about.story", label: "Mon histoire", hint: "Laissez une ligne vide entre deux paragraphes." },
+      { kind: "text", path: "pages.about.valuesHeading", label: "Titre des valeurs" },
+      ...blockFields("pages.about.values", 3, "Valeur"),
+      { kind: "paragraph", path: "pages.about.closing", label: "Phrase de fin" },
+      { kind: "text", path: "pages.about.closingCta.label", label: "Texte du bouton de fin" },
+    ],
+  },
+  {
+    id: "page-univers",
+    title: "Page Mon univers",
+    fields: [
+      { kind: "text", path: "pages.universe.kicker", label: "Petit titre" },
+      { kind: "heading", path: "pages.universe.heading", label: "Titre" },
+      { kind: "paragraph", path: "pages.universe.intro", label: "Introduction" },
+      { kind: "text", path: "pages.universe.conceptHeading", label: "Titre du concept" },
+      { kind: "paragraphs", path: "pages.universe.concept", label: "Le concept", hint: "Laissez une ligne vide entre deux paragraphes." },
+      { kind: "text", path: "pages.universe.episodesHeading", label: "Titre des épisodes" },
+      { kind: "paragraph", path: "pages.universe.episodesIntro", label: "Texte au-dessus des épisodes" },
+      { kind: "paragraph", path: "pages.universe.episodesEmpty", label: "Message si les épisodes ne s’affichent pas" },
+      { kind: "text", path: "pages.universe.youtubeChannelId", label: "Identifiant de la chaîne YouTube", hint: "Commence par UC (24 caractères). Les épisodes viennent de cette chaîne." },
+    ],
+  },
+  {
+    id: "page-communaute",
+    title: "Page La communauté",
+    fields: [
+      { kind: "text", path: "pages.community.kicker", label: "Petit titre" },
+      { kind: "heading", path: "pages.community.heading", label: "Titre" },
+      { kind: "paragraph", path: "pages.community.intro", label: "Introduction" },
+      { kind: "text", path: "pages.community.totalLabel", label: "Texte sous le total des abonnés" },
+      { kind: "text", path: "pages.community.supportHeading", label: "Titre « comment soutenir »" },
+      { kind: "text", path: "pages.community.support.follow.title", label: "Suivre, titre" },
+      { kind: "paragraph", path: "pages.community.support.follow.text", label: "Suivre, texte" },
+      { kind: "text", path: "pages.community.support.share.title", label: "Partager, titre" },
+      { kind: "paragraph", path: "pages.community.support.share.text", label: "Partager, texte" },
+      { kind: "text", path: "pages.community.support.donate.title", label: "Faire un don, titre" },
+      { kind: "paragraph", path: "pages.community.support.donate.text", label: "Faire un don, texte" },
+      { kind: "text", path: "pages.community.shareLabel", label: "Texte du bouton de partage" },
+      { kind: "paragraph", path: "pages.community.shareText", label: "Message partagé avec le lien" },
+    ],
+  },
+  {
+    id: "page-collaborations",
+    title: "Page Collaborations",
+    fields: [
+      { kind: "text", path: "pages.collaborations.kicker", label: "Petit titre" },
+      { kind: "heading", path: "pages.collaborations.heading", label: "Titre" },
+      { kind: "paragraph", path: "pages.collaborations.intro", label: "Introduction" },
+      { kind: "text", path: "pages.collaborations.audienceHeading", label: "Titre de l’audience" },
+      { kind: "text", path: "pages.collaborations.audienceNote", label: "Mention sous les chiffres" },
+      { kind: "text", path: "pages.collaborations.formatsHeading", label: "Titre des formats" },
+      ...blockFields("pages.collaborations.formats", 4, "Format"),
+      { kind: "text", path: "pages.collaborations.stepsHeading", label: "Titre des étapes" },
+      ...blockFields("pages.collaborations.steps", 3, "Étape"),
+      { kind: "text", path: "pages.collaborations.ctaHeading", label: "Titre de l’appel à écrire" },
+      { kind: "paragraph", path: "pages.collaborations.ctaText", label: "Texte de l’appel à écrire" },
+      { kind: "paragraph", path: "pages.collaborations.whatsappMessage", label: "Message WhatsApp pré-rempli" },
+    ],
+  },
 ];
+
+/** Titre et texte de chaque bloc d'une liste de taille fixe (valeurs, formats, étapes). */
+function blockFields(path: string, count: number, label: string): ContentField[] {
+  return Array.from({ length: count }, (_, index) => [
+    { kind: "text" as const, path: `${path}.${index}.title`, label: `${label} ${index + 1}, titre` },
+    { kind: "paragraph" as const, path: `${path}.${index}.text`, label: `${label} ${index + 1}, texte` },
+  ]).flat();
+}
 
 /** Valeur au chemin « a.b.0.c » (les segments numériques indexent les tableaux). */
 export function valueAt(source: unknown, path: string): unknown {

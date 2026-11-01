@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 const ENDPOINT = "/api/evenements";
@@ -17,14 +18,17 @@ function send(event: { kind: string; target?: string; path: string }) {
  * Rien n'est stocké dans le navigateur : ni cookie, ni identifiant.
  */
 export function ClickTracker() {
+  // Le gabarit reste monté d'une page à l'autre : une vue par changement d'adresse, pas une seule à l'arrivée.
+  const pathname = usePathname();
   useEffect(() => {
-    const path = window.location.pathname;
-    send({ kind: "page_view", path });
+    send({ kind: "page_view", path: pathname });
+  }, [pathname]);
 
+  useEffect(() => {
     function onClick(event: MouseEvent) {
       const element = (event.target as Element | null)?.closest<HTMLElement>("[data-track]");
       if (!element?.dataset.track) return;
-      send({ kind: element.dataset.track, target: element.dataset.trackTarget, path });
+      send({ kind: element.dataset.track, target: element.dataset.trackTarget, path: window.location.pathname });
     }
     // Phase de capture : le clic est compté même si un gestionnaire plus bas arrête sa propagation.
     document.addEventListener("click", onClick, { capture: true });

@@ -30,7 +30,7 @@ export default function ConfidentialitePage() {
             Ce qui est compté
           </h2>
           <p className="mt-2">
-            Pour savoir si le site est utile, chaque visite et chaque clic sur un bouton (réseau, WhatsApp, appel, soutien) est
+            Pour savoir si le site est utile, chaque visite et chaque clic sur un bouton (réseau, WhatsApp, appel, soutien, partage, lecture d’un épisode) est
             compté de façon anonyme. Pour chaque événement, le site enregistre seulement :
           </p>
           <ul className="mt-2 list-disc pl-5">
@@ -55,6 +55,14 @@ export default function ConfidentialitePage() {
             <li>Supabase stocke les textes du site, la photo et les chiffres anonymes ci-dessus.</li>
             <li>Resend envoie les e-mails de connexion à l’administration. Les visiteurs ne reçoivent jamais d’e-mail.</li>
             <li>Les polices de caractères sont servies par le site lui-même, sans appel à un service extérieur.</li>
+            <li>
+              YouTube fournit les épisodes de la page{" "}
+              <Link href="/univers" className="font-bold underline decoration-accent decoration-2 underline-offset-4">
+                Mon univers
+              </Link>
+              . Leurs miniatures viennent de YouTube (i.ytimg.com) et passent par le site. Le lecteur YouTube
+              (youtube-nocookie.com) ne se charge que lorsque vous lancez une vidéo : YouTube applique alors ses propres règles.
+            </li>
           </ul>
           <p className="mt-2">
             Quand vous touchez un bouton vers WhatsApp, un réseau social ou le service de paiement des dons, vous quittez ce site :

@@ -3,6 +3,7 @@ import "server-only";
 import type { z } from "zod";
 
 import { seedContent } from "@/content";
+import { mergePages } from "@/content/pages";
 import { donationSchema, siteContentSchema, type Donation } from "@/content/schema";
 import type { createSessionClient } from "@/lib/supabase/server";
 
@@ -23,6 +24,7 @@ export const editableContentSchema = siteContentSchema.pick({
   universe: true,
   contact: true,
   footerLine: true,
+  pages: true,
 });
 
 export type EditableContent = z.infer<typeof editableContentSchema>;
@@ -44,6 +46,7 @@ export async function readEditableContent(supabase: SessionClient): Promise<{ co
   const parsed = editableContentSchema.safeParse({
     ...seedEditable,
     ...sections,
+    pages: mergePages(sections.pages),
     creatorName: data.creator_name,
     tagline: data.tagline,
     roleLine: data.role_line,

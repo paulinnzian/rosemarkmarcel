@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 
 import { seedContent } from "@/content";
+import { mergePages } from "@/content/pages";
 import { siteContentSchema, type SiteContent } from "@/content/schema";
 import { networkName } from "@/lib/networks";
 import { isSupabaseConfigured, publicMediaUrl } from "@/lib/supabase/env";
@@ -51,8 +52,10 @@ async function readContentFromDatabase(): Promise<SiteContent> {
     : { src: seedContent.photo.src, width: seedContent.photo.width, height: seedContent.photo.height };
 
   // Le schéma Zod valide tout ce qui vient de la base, jsonb compris : une ligne invalide fait servir les valeurs initiales.
+  const sections = row.sections as Record<string, unknown>;
   return siteContentSchema.parse({
-    ...(row.sections as object),
+    ...sections,
+    pages: mergePages(sections.pages),
     creatorName: row.creator_name,
     tagline: row.tagline,
     roleLine: row.role_line,
